@@ -48,45 +48,20 @@
   // generator: which office-side tool consumes this work item's bundle.
 
   const WORK_TYPES = {
-    bw_quarterly: {
-      label: 'Bristol Water — Quarterly C&D',
-      short: 'BW Quarterly',
+    bristol_water: {
+      label: 'Bristol Water Visit',
+      short: 'Bristol Water',
       site_source: 'reference',
       reference: 'bw_sites',
       client_locked: 'Bristol Water',
       generator: 'bw_report_generator.py',
       legacy_export: 'bw',
       status: 'live',
-    },
-    bw_six_monthly: {
-      label: 'Bristol Water — Six-Monthly',
-      short: 'BW Six-Monthly',
-      site_source: 'reference',
-      reference: 'bw_sites',
-      client_locked: 'Bristol Water',
-      generator: 'bw_report_generator.py',
-      legacy_export: 'bw',
-      status: 'live',
-    },
-    bw_annual: {
-      label: 'Bristol Water — Annual',
-      short: 'BW Annual',
-      site_source: 'reference',
-      reference: 'bw_sites',
-      client_locked: 'Bristol Water',
-      generator: 'bw_report_generator.py',
-      legacy_export: 'bw',
-      status: 'live',
-    },
-    bw_combined: {
-      label: 'Bristol Water — Combined',
-      short: 'BW Combined',
-      site_source: 'reference',
-      reference: 'bw_sites',
-      client_locked: 'Bristol Water',
-      generator: 'bw_report_generator.py',
-      legacy_export: 'bw',
-      status: 'live',
+      // Bristol Water visits come in three cadences. This is NOT a separate
+      // work type — it's a property of the visit, chosen on the site picker.
+      // It drives two filters: which sites are eligible, and which subtasks
+      // the technician sees. See VISIT_CADENCES below.
+      cadence_required: true,
     },
     installation: {
       label: 'Device Installation',
@@ -129,6 +104,52 @@
       status: 'planned',
     },
   };
+
+  /**
+   * Bristol Water visit cadences.
+   *
+   * The "absorption" rule: a longer-cadence visit picks up everything from
+   * the shorter ones. A six-monthly visit does the quarterly work too.
+   * These two filters are lifted unchanged from the existing BW app so
+   * behaviour is identical.
+   *
+   *   sites  — which site frequencies are eligible for this visit
+   *   tasks  — which subtask frequencies the technician should see
+   */
+  const VISIT_CADENCES = {
+    quarterly: {
+      label: 'Quarterly',
+      blurb: 'Routine clean and disinfection.',
+      sites: ['quarterly'],
+      tasks: ['quarterly', 'ongoing'],
+    },
+    six_monthly: {
+      label: 'Six-Monthly',
+      blurb: 'Quarterly work plus header tanks, Lp samples and TF descales.',
+      sites: ['quarterly', 'six_monthly'],
+      tasks: ['quarterly', 'six_monthly', 'ongoing'],
+    },
+    annual: {
+      label: 'Annual',
+      blurb: 'Everything above plus TMV service, RPZ, calorifier and site review.',
+      sites: ['quarterly', 'six_monthly', 'annual'],
+      tasks: ['quarterly', 'six_monthly', 'annual', 'ongoing'],
+    },
+  };
+
+  function cadence(key) {
+    return VISIT_CADENCES[key] || null;
+  }
+
+  /** Site names eligible for a given cadence, sorted. */
+  function eligibleSites(sites, cadenceKey) {
+    const c = VISIT_CADENCES[cadenceKey];
+    if (!c) return [];
+    const allowed = new Set(c.sites);
+    return (sites || [])
+      .filter((s) => allowed.has(s.visit_frequency))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
 
   function workType(type) {
     return WORK_TYPES[type] || null;
@@ -202,13 +223,18 @@
     if (wt.status !== 'live') {
       throw new Error('createWorkItem: work type "' + type + '" is not built yet');
     }
+    if (wt.cadence_required && !(data && data.visit_type)) {
+      throw new Error('createWorkItem: "' + type + '" needs a visit_type (quarterly / six_monthly / annual)');
+    }
     return {
       work_item_id: genId('wi'),
       type: type,
       status: 'in_progress',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      data: data || emptyDataFor(type),
+      // Merge over the defaults rather than replacing them — passing only a
+      // cadence must not wipe task_results, device_records and the rest.
+      data: Object.assign(emptyDataFor(type), data || {}),
     };
   }
 
@@ -219,7 +245,7 @@
   function emptyDataFor(type) {
     if (isBWType(type)) {
       return {
-        visit_type: type.replace(/^bw_/, ''),
+        visit_type: null,   // set from the cadence picked on the site picker
         task_results: [],
         new_assets: [],
         pending_remedials: [],
@@ -284,6 +310,15 @@
       problems.push('BW work item present but site_ref is not set');
     }
 
+    // ...and each BW item must say which cadence it is, since that drives
+    // both the task list and the report.
+    v.work_items.forEach((wi, i) => {
+      if (!isBWType(wi.type)) return;
+      const vt = wi.data && wi.data.visit_type;
+      if (!vt) problems.push('work_items[' + i + '] missing visit_type');
+      else if (!VISIT_CADENCES[vt]) problems.push('work_items[' + i + '] invalid visit_type "' + vt + '"');
+    });
+
     return problems;
   }
 
@@ -340,7 +375,7 @@
     const visits = pairs.map(({ visit, item }) => ({
       visit_id: visit.visit_id,
       status: visit.status,
-      visit_type: item.data.visit_type || item.type.replace(/^bw_/, ''),
+      visit_type: item.data.visit_type,
       site: visit.site_ref || visit.site,
       date: visit.date,
       technician: visit.technician,
@@ -423,6 +458,9 @@
     SCHEMA_VERSION,
     EXPORT_TYPE,
     WORK_TYPES,
+    VISIT_CADENCES,
+    cadence,
+    eligibleSites,
     workType,
     liveWorkTypes,
     isBWType,
