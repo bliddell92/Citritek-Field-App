@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ea580c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Citritek Field">
+<title>Citritek Field App</title>
+<style>
+
+
+
+
+
+
+
+  /* -------------------------------------------------------------
+     Design tokens
+  ------------------------------------------------------------- */
+  :root {
+    --bg:        #f5f5f4;
+    --surface:   #ffffff;
+    --fg:        #1c1917;
+    --fg-soft:   #44403c;
+    --muted:     #78716c;
+    --border:    #e7e5e4;
+    --border-hi: #d6d3d1;
+    --orange:    #ea580c;
+    --orange-d:  #c2410c;
+    --orange-l:  #fff7ed;
+    --green:     #16a34a;
+    --amber:     #ca8a04;
+    --red:       #dc2626;
+    --shadow:    0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    min-height: 100vh;
+    /* Safe area padding for notched phones */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* -------------------------------------------------------------
+     Layout — single column, max-width on tablet+
+  ------------------------------------------------------------- */
+  .app { max-width: 560px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* -------------------------------------------------------------
+     Header
+  ------------------------------------------------------------- */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    padding-top: calc(12px + env(safe-area-inset-top));
+    display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .header::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0;
+    height: 3px; background: var(--orange);
+  }
+  .header .logo {
+    width: 32px; height: 32px; border-radius: 6px;
+    display: block; flex-shrink: 0;
+    object-fit: contain;
+  }
+  .header .title { font-size: 15px; font-weight: 600; }
+  .header .subtitle { font-size: 12px; color: var(--muted); }
+  .header .back {
+    background: none; border: 0; padding: 6px 10px; margin-left: -10px;
+    color: var(--fg); font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .header .back:hover { color: var(--orange); }
+  .header .stale {
+    margin-left: auto; font-size: 11px; color: var(--amber); font-weight: 500;
+  }
+
+  /* -------------------------------------------------------------
+     Screens — exactly one visible at any time
+  ------------------------------------------------------------- */
+  .screen { display: none; flex: 1; padding: 16px; }
+  .screen.active { display: block; }
+
+  .screen h2 {
+    font-size: 18px; font-weight: 600; margin: 4px 0 4px 0;
+  }
+  .screen .lede {
+    font-size: 14px; color: var(--muted); margin: 0 0 16px 0;
+  }
+
+  /* -------------------------------------------------------------
+     Cards / list rows
+  ------------------------------------------------------------- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+    transition: border-color 0.1s, transform 0.05s;
+  }
+  .card:active { transform: scale(0.99); }
+  .card:hover { border-color: var(--border-hi); }
+  .card.selected {
+    border-color: var(--orange);
+    background: var(--orange-l);
+  }
+  .card .card-title {
+    font-size: 16px; font-weight: 600; margin: 0;
+  }
+  .card .card-sub {
+    font-size: 13px; color: var(--muted); margin: 4px 0 0 0;
+  }
+  .card .card-meta {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .pill {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 999px;
+    background: var(--bg); color: var(--fg-soft);
+    border: 1px solid var(--border);
+  }
+  .pill.orange { background: var(--orange-l); color: var(--orange-d); border-color: #fed7aa; }
+  .pill.green  { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+  .pill.amber  { background: #fef3c7; color: #a16207; border-color: #fde68a; }
+  .pill.red    { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+
+  /* -------------------------------------------------------------
+     Buttons
+  ------------------------------------------------------------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 16px; border-radius: 8px;
+    font: inherit; font-weight: 600; font-size: 15px;
+    border: 0; cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.1s;
+  }
+  .btn-primary { background: var(--orange); color: white; }
+  .btn-primary:hover { background: var(--orange-d); }
+  .btn-primary:disabled { background: var(--border-hi); cursor: not-allowed; }
+  .btn-secondary {
+    background: var(--surface); color: var(--fg); border: 1px solid var(--border-hi);
+  }
+  .btn-secondary:hover { background: var(--bg); }
+  .btn-block { width: 100%; }
+  .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-row > * { flex: 1; }
+
+  /* -------------------------------------------------------------
+     Forms
+  ------------------------------------------------------------- */
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block; font-size: 13px; font-weight: 500;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .field input, .field select {
+    width: 100%; padding: 11px 12px; font: inherit;
+    background: var(--surface); color: var(--fg);
+    border: 1px solid var(--border-hi); border-radius: 8px;
+  }
+  .field input:focus, .field select:focus {
+    outline: 2px solid var(--orange); outline-offset: -1px;
+    border-color: var(--orange);
+  }
+
+  /* -------------------------------------------------------------
+     Search
+  ------------------------------------------------------------- */
+  .search {
+    position: sticky; top: calc(57px + env(safe-area-inset-top));
+    background: var(--bg); padding: 8px 0 12px 0; z-index: 5;
+  }
+  .search input {
+    width: 100%; padding: 10px 14px; font: inherit; font-size: 15px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  /* -------------------------------------------------------------
+     Section headings inside lists
+  ------------------------------------------------------------- */
+  .section-head {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--muted);
+    padding: 12px 4px 8px 4px;
+  }
+
+  /* -------------------------------------------------------------
+     Empty state
+  ------------------------------------------------------------- */
+  .empty {
+    text-align: center; padding: 40px 20px; color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* -------------------------------------------------------------
+     Visit summary block (shown on home screen if in-progress)
+  ------------------------------------------------------------- */
+  .resume {
+    background: var(--orange-l);
+    border: 1px solid #fed7aa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .resume .resume-title {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--orange-d);
+  }
+  .resume .resume-site {
+    font-size: 16px; font-weight: 600; margin: 2px 0;
+  }
+
+  /* -------------------------------------------------------------
+     Toast / inline error
+  ------------------------------------------------------------- */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--fg); color: white; padding: 10px 16px;
+    border-radius: 8px; font-size: 14px; z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    max-width: 90%;
+  }
+  .toast.error { background: var(--red); }
+
+  /* ---- Additions for the unified app ---- */
+  .wt-card { position: relative; }
+  .wt-card.planned {
+    opacity: 0.5; cursor: not-allowed; background: var(--bg);
+  }
+  .wt-card.planned:active { transform: none; }
+  .wt-group {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--muted);
+    padding: 14px 4px 8px 4px;
+  }
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .wi-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+  }
+  .wi-row .wi-main { flex: 1; min-width: 0; }
+  .wi-row .wi-title { font-weight: 600; font-size: 15px; }
+  .wi-row .wi-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .wi-row .wi-del {
+    background: none; border: 0; color: var(--muted);
+    font-size: 18px; cursor: pointer; padding: 4px 8px; line-height: 1;
+  }
+  .wi-row .wi-del:hover { color: var(--red); }
+  .locked {
+    background: var(--bg); color: var(--fg-soft);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 11px 12px; font-size: 15px;
+  }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .mismatch {
+    background: #fee2e2; border: 1px solid #fecaca; border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 14px;
+  }
+  .mismatch .mm-title {
+    font-size: 13px; font-weight: 700; color: #b91c1c;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .mismatch .mm-body { font-size: 14px; color: #7f1d1d; margin-top: 6px; }
+  .mismatch code {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px;
+    background: rgba(255,255,255,0.6); padding: 1px 5px; border-radius: 4px;
+  }
+  /* -------------------------------------------------------------
+     "Open on phone" helper + QR modal — lifted verbatim from the
+     Bristol Water app so it looks identical to what Tom and Ben use.
+  ------------------------------------------------------------- */
+  .home-share {
+    margin-top: 32px; padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .btn-share {
+    background: transparent; border: 0; padding: 8px 14px;
+    color: var(--muted); font-size: 13px; cursor: pointer;
+    font: inherit; font-size: 13px;
+  }
+  .btn-share:hover { color: var(--fg); }
+
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+    z-index: 100; display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+  }
+  .modal-card {
+    background: white; border-radius: 12px; width: 100%; max-width: 360px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+  }
+  .modal-title { font-weight: 600; font-size: 15px; }
+  .modal-close {
+    background: transparent; border: 0; font-size: 18px; cursor: pointer;
+    color: var(--muted); padding: 4px 8px;
+  }
+  .modal-body { padding: 20px 16px 18px; }
+  .qr-holder {
+    background: white; padding: 12px; border: 1px solid var(--border);
+    border-radius: 8px; margin: 0 auto 14px;
+    width: fit-content;
+    min-height: 220px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qr-holder img { display: block; max-width: 220px; height: auto; }
+  .qr-holder svg { display: block; width: 220px; height: 220px; }
+  .modal-hint {
+    text-align: center; font-size: 13px; color: var(--muted); margin: 0 0 12px;
+  }
+  .modal-url {
+    padding: 8px 10px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; font-size: 12px; color: var(--fg-soft);
+    word-break: break-all; text-align: center;
+    margin-bottom: 12px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+
+  .verfoot {
+    text-align: center; padding: 4px 12px 10px 12px;
+    font-size: 12px; color: var(--muted);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    -webkit-user-select: all; user-select: all;
+  }
+  .seg {
+    display: flex; gap: 6px; margin-bottom: 6px;
+  }
+  .seg button {
+    flex: 1; padding: 10px 6px; font: inherit; font-weight: 600; font-size: 14px;
+    background: var(--surface); color: var(--fg-soft);
+    border: 1px solid var(--border-hi); border-radius: 8px; cursor: pointer;
+  }
+  .seg button.on {
+    background: var(--orange); color: #fff; border-color: var(--orange);
+  }
+  .seg-blurb { font-size: 12px; color: var(--muted); margin: 0 0 12px 2px; min-height: 16px; }
+  .newflag {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 999px; margin-left: 6px;
+    background: #fef3c7; color: #a16207; border: 1px solid #fde68a;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="header">
+    <button class="back" id="backBtn" style="display: none">‹ Back</button>
+    <img class="logo" alt="Citritek" src="data:image/png;base64,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">
+    <div>
+      <div class="title">Citritek</div>
+      <div class="subtitle" id="headerSubtitle">Field App</div>
+    </div>
+    <div class="stale" id="staleIndicator" style="display: none">⚠ Offline</div>
+  </header>
+
+  <!-- ========================= HOME ========================= -->
+  <section class="screen active" data-screen="home">
+    <div id="mismatchSlot"></div>
+    <div id="resumeSlot"></div>
+
+    <button class="btn btn-primary btn-block" onclick="goWorkType()">
+      + New job
+    </button>
+
+    <div class="section-head">Recent visits</div>
+    <div id="recentList">
+      <div class="empty">No visits on this device yet.</div>
+    </div>
+
+    <div class="home-share">
+      <button class="btn-share" type="button" onclick="showShareModal()">
+        📱 Open this app on a phone
+      </button>
+
+      <!-- Read this out if anything looks wrong. It says exactly what's running. -->
+      <div class="verfoot" id="versionFooter"></div>
+    </div>
+  </section>
+
+  <!-- QR handoff. The code is generated in the browser by ctk_qr.js, so this
+       works with no internet connection and nothing is sent to a third party. -->
+  <div id="shareModal" class="modal-backdrop" style="display:none"
+       onclick="if(event.target===this)hideShareModal()">
+    <div class="modal-card">
+      <div class="modal-head">
+        <span class="modal-title">Open on a phone</span>
+        <button class="modal-close" onclick="hideShareModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="qr-holder" id="qrHolder"></div>
+        <p class="modal-hint">Scan this with your phone's camera to open the app there.</p>
+        <div class="modal-url" id="qrUrl"></div>
+        <button class="btn btn-secondary btn-block" onclick="copyShareUrl()">Copy link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== WORK TYPE ======================== -->
+  <section class="screen" data-screen="workType">
+    <h2>What are you doing?</h2>
+    <p class="lede">Pick the job type. The right form appears next.</p>
+    <div id="workTypeList"></div>
+  </section>
+
+  <!-- ===================== SITE PICKER ====================== -->
+  <!-- Only shown for work types backed by reference data (Bristol Water). -->
+  <section class="screen" data-screen="sitePicker">
+    <h2 id="spHeading">Which visit?</h2>
+    <p class="lede" id="sitePickerLede">Loading sites…</p>
+
+    <div class="seg" id="cadenceSeg"></div>
+    <p class="seg-blurb" id="cadenceBlurb"></p>
+
+    <div id="siteSearchWrap" class="search" style="display:none">
+      <input type="search" id="siteSearch" placeholder="Search by name or postcode" oninput="filterSites()">
+    </div>
+    <div id="siteList"></div>
+
+    <div id="cadenceContinue" style="display:none">
+      <button class="btn btn-primary btn-block" onclick="confirmCadenceOnly()">Continue</button>
+    </div>
+  </section>
+
+  <!-- ======================= SETUP ========================== -->
+  <section class="screen" data-screen="setup">
+    <h2 id="setupHeading">Job details</h2>
+    <p class="lede" id="setupLede">Last step before you start.</p>
+
+    <div id="setupClientField" class="field">
+      <label for="fClient">Client</label>
+      <input type="text" id="fClient" list="dlClient" autocomplete="off" placeholder="e.g. Dishoom">
+      <datalist id="dlClient"></datalist>
+      <div class="hint" id="clientHint"></div>
+    </div>
+
+    <div id="setupClientLocked" class="field" style="display:none">
+      <label>Client</label>
+      <div class="locked" id="lockedClient"></div>
+    </div>
+
+    <div id="setupSiteField" class="field">
+      <label for="fSite">Site</label>
+      <input type="text" id="fSite" list="dlSite" autocomplete="off" placeholder="e.g. Battersea (D10)">
+      <datalist id="dlSite"></datalist>
+    </div>
+
+    <div id="setupSiteLocked" class="field" style="display:none">
+      <label>Site</label>
+      <div class="locked" id="lockedSite"></div>
+    </div>
+
+    <div id="setupAddressField" class="field">
+      <label for="fAddress">Address <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+      <input type="text" id="fAddress" autocomplete="off" placeholder="Appears on the report">
+    </div>
+
+    <div class="field">
+      <label for="fDate">Date</label>
+      <input type="date" id="fDate">
+    </div>
+
+    <div class="field">
+      <label for="fTech">Technician</label>
+      <select id="fTech">
+        <option value="">— Select technician —</option>
+        <option>Tom Wharton</option>
+        <option>Ben Liddell</option>
+        <option>Sam Liddell</option>
+        <option>Ian Mein</option>
+      </select>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goBack()">Back</button>
+      <button class="btn btn-primary" onclick="startVisit()">Start job</button>
+    </div>
+  </section>
+
+  <!-- ======================== VISIT ========================= -->
+  <section class="screen" data-screen="visit">
+    <div id="visitHeader"></div>
+    <div class="section-head">Work items</div>
+    <div id="workItemList"></div>
+
+    <button class="btn btn-secondary btn-block" onclick="goAddWorkItem()" style="margin-top:4px">
+      + Add work item at this site
+    </button>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goHome()">Home</button>
+    </div>
+  </section>
+
+</div>
+
+<script src="ctk_qr.js"></script>
+<script src="ctk_schema.js"></script>
+<script src="ctk_storage.js"></script>
+<script>
+'use strict';
+
+/* ============================================================
+   App state
+============================================================ */
+/* The build this file belongs to. ctk_schema.js and ctk_storage.js each
+   declare the same constant; checkBuilds() below shouts if they disagree. */
+const APP_BUILD = '0.3.0';
+window.APP_BUILD = APP_BUILD;   // reachable from the console for debugging
+
+const APP = {
+  sites: null,
+  isStaleData: false,
+  draft: {                 // the visit being created
+    type: null,            // work type key
+    site: null,            // resolved reference site object, when applicable
+    cadence: null,         // quarterly / six_monthly / annual, for BW visits
+  },
+  currentVisitId: null,
+  addingToVisit: null,     // set when adding a 2nd work item to an existing visit
+  screenStack: ['home'],
+};
+
+/* ============================================================
+   Screen routing
+============================================================ */
+function showScreen(name, push = true) {
+  document.querySelectorAll('.screen').forEach((s) => {
+    s.classList.toggle('active', s.dataset.screen === name);
+  });
+  if (push) APP.screenStack.push(name);
+  updateBackButton();
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  if (APP.screenStack.length <= 1) return;
+  APP.screenStack.pop();
+  showScreen(APP.screenStack[APP.screenStack.length - 1], false);
+}
+
+function goHome() {
+  document.getElementById('headerSubtitle').textContent = 'Field App \u00b7 v' + APP_BUILD;
+  APP.screenStack = ['home'];
+  APP.draft = { type: null, site: null, cadence: null };
+  APP.addingToVisit = null;
+  showScreen('home', false);
+  refreshHome();
+}
+
+function updateBackButton() {
+  const cur = APP.screenStack[APP.screenStack.length - 1];
+  const show = cur !== 'home' && cur !== 'visit';
+  document.getElementById('backBtn').style.display = show ? 'flex' : 'none';
+}
+document.getElementById('backBtn').addEventListener('click', goBack);
+
+function toast(message, isError = false) {
+  const old = document.querySelector('.toast');
+  if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'toast' + (isError ? ' error' : '');
+  el.textContent = message;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   Boot
+============================================================ */
+/**
+ * Compare the build stamps of the three files. A mismatch means someone
+ * uploaded one file and not the others — which produces an app that looks
+ * fine but behaves like a mix of two versions. Loud, unmissable, and it
+ * names the file to replace.
+ */
+function checkBuilds() {
+  const parts = {
+    'index.html':     APP_BUILD,
+    'ctk_schema.js':  (typeof CTKSchema  !== 'undefined') ? CTKSchema.BUILD  : 'missing',
+    'ctk_storage.js': (typeof CTKStorage !== 'undefined') ? CTKStorage.BUILD : 'missing',
+    'ctk_qr.js':      (typeof CTKQR      !== 'undefined') ? CTKQR.BUILD      : 'missing',
+  };
+  const stale = Object.keys(parts).filter((f) => parts[f] !== APP_BUILD);
+
+  document.getElementById('versionFooter').textContent =
+    'v' + APP_BUILD + ' \u00b7 schema ' +
+    ((typeof CTKSchema !== 'undefined') ? CTKSchema.SCHEMA_VERSION : '?');
+
+  document.getElementById('headerSubtitle').textContent = 'Field App \u00b7 v' + APP_BUILD;
+
+  const slot = document.getElementById('mismatchSlot');
+  if (!stale.length) { slot.innerHTML = ''; return true; }
+
+  slot.innerHTML =
+    '<div class="mismatch">' +
+      '<div class="mm-title">\u26a0 Files out of step</div>' +
+      '<div class="mm-body">This app is <code>v' + APP_BUILD + '</code>, but ' +
+        stale.map((f) => '<code>' + f + '</code> is <code>' + parts[f] + '</code>').join(' and ') +
+        '. Re-upload ' + (stale.length === 1 ? 'that file' : 'those files') +
+        ' so every file matches, then hard-refresh. Until then some screens ' +
+        'will behave like the older version.</div>' +
+    '</div>';
+  return false;
+}
+
+async function boot() {
+  checkBuilds();
+  try {
+    const res = await CTKStorage.refreshReferenceData();
+    APP.isStaleData = !res.fresh;
+  } catch (err) {
+    APP.isStaleData = true;
+  }
+  document.getElementById('staleIndicator').style.display =
+    APP.isStaleData ? 'block' : 'none';
+
+  try {
+    await CTKStorage.runAutoClear();
+  } catch (err) { /* non-fatal */ }
+
+  await refreshHome();
+}
+
+/* ============================================================
+   Home
+============================================================ */
+async function refreshHome() {
+  let visits = [];
+  try { visits = await CTKStorage.getAllVisits(); }
+  catch (err) { toast('Could not load visits: ' + err.message, true); return; }
+
+  // In-progress banner
+  const resume = document.getElementById('resumeSlot');
+  const open = visits.filter((v) => v.status === 'in_progress');
+  if (open.length) {
+    const v = open[0];
+    resume.innerHTML =
+      '<div class="resume">' +
+        '<div class="resume-title">In progress</div>' +
+        '<div class="resume-site">' + escapeHtml(v.site) + '</div>' +
+        '<div class="card-sub">' + escapeHtml(v.date) + ' · ' + escapeHtml(v.technician) +
+          ' · ' + v.work_items.length + ' work item' + (v.work_items.length === 1 ? '' : 's') + '</div>' +
+        '<div class="btn-row">' +
+          '<button class="btn btn-primary" onclick="openVisit(\'' + v.visit_id + '\')">Resume</button>' +
+        '</div>' +
+      '</div>';
+  } else {
+    resume.innerHTML = '';
+  }
+
+  // Recent list
+  const list = document.getElementById('recentList');
+  const recent = visits.filter((v) => v.status !== 'in_progress').slice(0, 12);
+  if (!recent.length) {
+    list.innerHTML = '<div class="empty">No completed visits on this device yet.</div>';
+    return;
+  }
+  list.innerHTML = recent.map((v) => {
+    const chips = v.work_items.map((wi) => {
+      const wt = CTKSchema.workType(wi.type);
+      return '<span class="pill">' + escapeHtml(wt ? wt.short : wi.type) + '</span>';
+    }).join('');
+    const statusPill = v.status === 'exported'
+      ? '<span class="pill green">Exported</span>'
+      : '<span class="pill orange">Ready to export</span>';
+    return '<div class="card" onclick="openVisit(\'' + v.visit_id + '\')">' +
+      '<p class="card-title">' + escapeHtml(v.site) + '</p>' +
+      '<p class="card-sub">' + escapeHtml(v.client || '—') + ' · ' +
+        escapeHtml(v.date) + ' · ' + escapeHtml(v.technician) + '</p>' +
+      '<div class="chip-row">' + statusPill + chips + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ============================================================
+   Work type picker  — the FIRST choice the technician makes
+============================================================ */
+function goWorkType() {
+  renderWorkTypes();
+  showScreen('workType');
+}
+
+async function goAddWorkItem() {
+  // Adding a second job at a site we've already set up: skip the
+  // setup screen entirely and reuse client/site/date/technician.
+  // Set the flags SYNCHRONOUSLY first — if we awaited before setting them,
+  // a fast tap on a work type could arrive while addingToVisit was still
+  // null and start a whole new visit instead.
+  APP.addingToVisit = APP.currentVisitId;
+  APP.addingToVisitHasRef = !!(APP.currentVisitSiteRef);
+  goWorkType();
+}
+
+function renderWorkTypes() {
+  const types = CTKSchema.WORK_TYPES;
+  const bw = [], other = [], planned = [];
+
+  Object.keys(types).forEach((k) => {
+    const wt = types[k];
+    // When adding a second job to an existing visit, only offer types the
+    // envelope can actually support. A Bristol Water item needs a site_ref,
+    // which a typed job (Dishoom, Harper Water) doesn't have.
+    if (APP.addingToVisit && wt.site_source === 'reference' && !APP.addingToVisitHasRef) return;
+    if (wt.status === 'planned') planned.push(k);
+    else if (CTKSchema.isBWType(k)) bw.push(k);
+    else other.push(k);
+  });
+
+  function card(k) {
+    const wt = types[k];
+    const src = wt.site_source === 'reference'
+      ? 'Site list loaded automatically'
+      : 'You enter the client and site';
+    return '<div class="card wt-card" onclick="selectWorkType(\'' + k + '\')">' +
+      '<p class="card-title">' + escapeHtml(wt.label) + '</p>' +
+      '<p class="card-sub">' + src + '</p>' +
+    '</div>';
+  }
+
+  function plannedCard(k) {
+    const wt = types[k];
+    return '<div class="card wt-card planned">' +
+      '<p class="card-title">' + escapeHtml(wt.label) + '</p>' +
+      '<p class="card-sub">Not built yet</p>' +
+    '</div>';
+  }
+
+  let html = '';
+  if (other.length) {
+    html += '<div class="wt-group">General</div>' + other.map(card).join('');
+  }
+  if (bw.length) {
+    html += '<div class="wt-group">Bristol Water</div>' + bw.map(card).join('');
+  }
+  if (planned.length) {
+    html += '<div class="wt-group">Coming later</div>' + planned.map(plannedCard).join('');
+  }
+  document.getElementById('workTypeList').innerHTML = html;
+}
+
+async function selectWorkType(type) {
+  const wt = CTKSchema.workType(type);
+  if (!wt || wt.status !== 'live') { toast('That job type isn\'t built yet.'); return; }
+  APP.draft.type = type;
+  APP.draft.site = null;
+  APP.draft.cadence = null;
+
+  // Bristol Water always needs a cadence first — it decides which sites are
+  // eligible and which subtasks the technician sees.
+  if (wt.cadence_required) {
+    await goSitePicker();
+    return;
+  }
+
+  // Adding to an existing visit — no setup needed, the envelope is already there.
+  if (APP.addingToVisit) {
+    await appendWorkItem(type, null);
+    return;
+  }
+
+  await goSetup();
+}
+
+/** Add a work item to the visit already open, reusing its envelope. */
+async function appendWorkItem(type, cadence) {
+  const wt = CTKSchema.workType(type);
+  try {
+    const data = cadence
+      ? Object.assign(CTKSchema.emptyDataFor(type), { visit_type: cadence })
+      : undefined;
+    const wi = CTKSchema.createWorkItem(type, data);
+    await CTKStorage.addWorkItem(APP.addingToVisit, wi);
+    const visitId = APP.addingToVisit;
+    APP.addingToVisit = null;
+    APP.draft = { type: null, site: null, cadence: null };
+    APP.screenStack = ['home'];
+    toast('Added ' + wt.short);
+    openVisit(visitId);
+  } catch (err) {
+    toast('Could not add work item: ' + err.message, true);
+  }
+}
+
+/* ============================================================
+   Site picker — reference-backed work types only
+============================================================ */
+async function goSitePicker() {
+  showScreen('sitePicker');
+  const lede = document.getElementById('sitePickerLede');
+  try {
+    if (!APP.sites) {
+      const data = await CTKStorage.loadSites();
+      APP.sites = data.sites || [];
+    }
+  } catch (err) {
+    lede.textContent = 'Could not load the site list. ' + err.message;
+    return;
+  }
+
+  // Adding to a visit that already has a site — only the cadence is needed.
+  const cadenceOnly = !!APP.addingToVisit;
+  document.getElementById('spHeading').textContent =
+    cadenceOnly ? 'Which visit?' : 'Which visit, and where?';
+  lede.textContent = cadenceOnly
+    ? 'Pick the cadence for this Bristol Water visit.'
+    : 'Pick the cadence, then the site. A longer visit includes the shorter work too.';
+
+  document.getElementById('siteSearchWrap').style.display = 'none';
+  document.getElementById('siteList').innerHTML = '';
+  document.getElementById('cadenceContinue').style.display = 'none';
+
+  renderCadenceSeg();
+}
+
+function renderCadenceSeg() {
+  const cs = CTKSchema.VISIT_CADENCES;
+  document.getElementById('cadenceSeg').innerHTML = Object.keys(cs).map((k) =>
+    '<button type="button" class="' + (APP.draft.cadence === k ? 'on' : '') + '" ' +
+      'onclick="selectCadence(\'' + k + '\')">' + escapeHtml(cs[k].label) + '</button>'
+  ).join('');
+  const c = CTKSchema.cadence(APP.draft.cadence);
+  document.getElementById('cadenceBlurb').textContent = c ? c.blurb : '';
+}
+
+function selectCadence(key) {
+  APP.draft.cadence = key;
+  renderCadenceSeg();
+
+  if (APP.addingToVisit) {
+    document.getElementById('cadenceContinue').style.display = '';
+    return;
+  }
+
+  const eligible = CTKSchema.eligibleSites(APP.sites, key);
+  document.getElementById('siteSearchWrap').style.display = eligible.length ? '' : 'none';
+  document.getElementById('sitePickerLede').textContent =
+    eligible.length + ' of ' + APP.sites.length + ' sites are due a ' +
+    CTKSchema.cadence(key).label.toLowerCase() + ' visit.';
+  renderSitePicker(eligible);
+}
+
+async function confirmCadenceOnly() {
+  await appendWorkItem(APP.draft.type, APP.draft.cadence);
+}
+
+function renderSitePicker(sites) {
+  if (!sites.length) {
+    document.getElementById('siteList').innerHTML =
+      '<div class="empty">No sites are due this visit type.</div>';
+    return;
+  }
+  document.getElementById('siteList').innerHTML = sites.map((s) => {
+    const search = (s.name + ' ' + (s.postcode || '')).toLowerCase();
+    return '<div class="card" data-search="' + escapeHtml(search) + '" ' +
+      'onclick="selectSite(' + JSON.stringify(s.name).replace(/"/g, '&quot;') + ')">' +
+      '<p class="card-title">' + escapeHtml(s.name) + '</p>' +
+      '<p class="card-sub">' + escapeHtml(s.postcode || '') +
+        (s.visit_frequency ? ' \u00b7 ' + escapeHtml(s.visit_frequency.replace(/_/g, '-')) : '') + '</p>' +
+    '</div>';
+  }).join('');
+}
+
+function filterSites() {
+  const q = document.getElementById('siteSearch').value.trim().toLowerCase();
+  document.querySelectorAll('#siteList .card').forEach((row) => {
+    row.style.display = (!q || row.dataset.search.includes(q)) ? '' : 'none';
+  });
+}
+
+async function selectSite(name) {
+  APP.draft.site = APP.sites.find((s) => s.name === name) || { name: name };
+  await goSetup();
+}
+
+/* ============================================================
+   Setup screen — shape depends on the work type
+============================================================ */
+async function goSetup() {
+  const wt = CTKSchema.workType(APP.draft.type);
+  const isRef = wt.site_source === 'reference';
+
+  document.getElementById('setupHeading').textContent =
+    isRef ? 'Confirm visit details' : wt.label;
+  document.getElementById('setupLede').textContent =
+    isRef ? 'Last step before you start.'
+          : 'Enter the job details. These appear on the report.';
+
+  // Client: locked for BW, typed for everything else
+  document.getElementById('setupClientField').style.display = wt.client_locked ? 'none' : '';
+  document.getElementById('setupClientLocked').style.display = wt.client_locked ? '' : 'none';
+  if (wt.client_locked) {
+    document.getElementById('lockedClient').textContent = wt.client_locked;
+  }
+
+  // Site: locked once picked from the reference list, typed otherwise
+  document.getElementById('setupSiteField').style.display = isRef ? 'none' : '';
+  document.getElementById('setupSiteLocked').style.display = isRef ? '' : 'none';
+  if (isRef && APP.draft.site) {
+    document.getElementById('lockedSite').textContent = APP.draft.site.name;
+  }
+
+  // Address only makes sense for typed jobs
+  document.getElementById('setupAddressField').style.display = isRef ? 'none' : '';
+
+  // Default date to today
+  const d = document.getElementById('fDate');
+  if (!d.value) d.value = new Date().toISOString().slice(0, 10);
+
+  await refreshSuggestions();
+  showScreen('setup');
+}
+
+/**
+ * Populate the datalists from values typed on this device before.
+ * This is what stops "Dishoom", "dishoom" and "Dishoom Ltd" becoming
+ * three different clients across three reports.
+ */
+async function refreshSuggestions() {
+  try {
+    const clients = await CTKStorage.getSuggestions('client', '');
+    document.getElementById('dlClient').innerHTML =
+      clients.map((c) => '<option value="' + escapeHtml(c) + '">').join('');
+
+    const sites = await CTKStorage.getSuggestions('site', '');
+    document.getElementById('dlSite').innerHTML =
+      sites.map((s) => '<option value="' + escapeHtml(s) + '">').join('');
+
+    document.getElementById('clientHint').innerHTML = clients.length
+      ? 'Start typing — previous clients will be suggested.'
+      : 'First job on this device, so there\'s nothing to suggest yet.';
+  } catch (err) { /* suggestions are a convenience, never fatal */ }
+}
+
+async function startVisit() {
+  const wt = CTKSchema.workType(APP.draft.type);
+  const isRef = wt.site_source === 'reference';
+
+  const client = wt.client_locked || document.getElementById('fClient').value.trim();
+  const site = isRef ? (APP.draft.site && APP.draft.site.name)
+                     : document.getElementById('fSite').value.trim();
+  const address = isRef ? '' : document.getElementById('fAddress').value.trim();
+  const date = document.getElementById('fDate').value;
+  const technician = document.getElementById('fTech').value;
+
+  if (!client) { toast('Please enter a client', true); return; }
+  if (!site) { toast('Please enter a site', true); return; }
+  if (!date) { toast('Please pick a date', true); return; }
+  if (!technician) { toast('Please pick a technician', true); return; }
+
+  // Flag a client we've not seen on this device, so the office knows to
+  // check it rather than silently accepting a possible typo.
+  let clientIsNew = false;
+  if (!wt.client_locked) {
+    const known = await CTKStorage.getSuggestions('client', '');
+    clientIsNew = !known.some((c) => c.toLowerCase() === client.toLowerCase());
+  }
+
+  try {
+    const visit = CTKSchema.createVisit({
+      client, site, address, date, technician,
+      site_ref: isRef ? APP.draft.site.name : null,
+      client_is_new: clientIsNew,
+      app_version: APP_BUILD,
+    });
+    const wiData = wt.cadence_required
+      ? Object.assign(CTKSchema.emptyDataFor(APP.draft.type), { visit_type: APP.draft.cadence })
+      : undefined;
+    visit.work_items.push(CTKSchema.createWorkItem(APP.draft.type, wiData));
+    await CTKStorage.saveVisit(visit);
+
+    // Remember what was typed, for next time
+    if (!wt.client_locked) {
+      await CTKStorage.rememberValue('client', client);
+      await CTKStorage.rememberValue('site', site);
+    }
+
+    APP.draft = { type: null, site: null, cadence: null };
+    APP.screenStack = ['home'];
+    openVisit(visit.visit_id);
+  } catch (err) {
+    toast('Could not start job: ' + err.message, true);
+  }
+}
+
+/* ============================================================
+   Visit screen
+============================================================ */
+async function openVisit(visitId) {
+  const v = await CTKStorage.getVisit(visitId);
+  if (!v) { toast('Visit not found', true); return; }
+  APP.currentVisitId = visitId;
+  APP.currentVisitSiteRef = v.site_ref || null;
+
+  document.getElementById('headerSubtitle').textContent = v.site;
+
+  const newFlag = v.meta && v.meta.client_is_new
+    ? '<span class="newflag">New client</span>' : '';
+
+  document.getElementById('visitHeader').innerHTML =
+    '<h2 style="margin-bottom:2px">' + escapeHtml(v.site) + newFlag + '</h2>' +
+    '<p class="lede">' + escapeHtml(v.client) + ' · ' + escapeHtml(v.date) +
+      ' · ' + escapeHtml(v.technician) + '</p>';
+
+  renderWorkItems(v);
+  showScreen('visit');
+}
+
+function renderWorkItems(v) {
+  const list = document.getElementById('workItemList');
+  if (!v.work_items.length) {
+    list.innerHTML = '<div class="empty">No work items yet.</div>';
+    return;
+  }
+  list.innerHTML = v.work_items.map((wi) => {
+    const wt = CTKSchema.workType(wi.type);
+    const cad = wi.data && wi.data.visit_type ? CTKSchema.cadence(wi.data.visit_type) : null;
+    const label = (wt ? wt.label : wi.type) + (cad ? ' \u2014 ' + cad.label : '');
+    return '<div class="wi-row">' +
+      '<div class="wi-main">' +
+        '<div class="wi-title">' + escapeHtml(label) + '</div>' +
+        '<div class="wi-sub">Form coming in the next build step</div>' +
+      '</div>' +
+      '<button class="wi-del" title="Remove" ' +
+        'onclick="removeWorkItem(\'' + wi.work_item_id + '\')">✕</button>' +
+    '</div>';
+  }).join('');
+}
+
+async function removeWorkItem(workItemId) {
+  const v = await CTKStorage.getVisit(APP.currentVisitId);
+  if (!v) return;
+  const wi = v.work_items.find((x) => x.work_item_id === workItemId);
+  const wt = wi ? CTKSchema.workType(wi.type) : null;
+  const label = wt ? wt.label : 'this work item';
+  if (!confirm('Remove ' + label + '? Any photos taken for it will be deleted too.')) return;
+  try {
+    await CTKStorage.deleteWorkItem(APP.currentVisitId, workItemId);
+    toast('Removed');
+    openVisit(APP.currentVisitId);
+  } catch (err) {
+    toast('Could not remove: ' + err.message, true);
+  }
+}
+
+/* ============================================================
+   Share / QR handoff
+============================================================ */
+
+/** The URL a phone should open. Strips any query or hash. */
+function shareUrl() {
+  return location.origin + location.pathname;
+}
+
+function showShareModal() {
+  const url = shareUrl();
+  document.getElementById('qrUrl').textContent = url;
+
+  const holder = document.getElementById('qrHolder');
+  try {
+    holder.innerHTML = CTKQR.toSVG(url, { scale: 6, quiet: 3 });
+  } catch (err) {
+    // Never leave a blank box — the URL below is still usable.
+    holder.innerHTML = '<p class="modal-hint">Couldn\'t draw the code (' +
+      escapeHtml(err.message) + '). Use the link below instead.</p>';
+  }
+
+  document.getElementById('shareModal').style.display = 'flex';
+  document.addEventListener('keydown', handleShareKey);
+}
+
+function hideShareModal() {
+  document.getElementById('shareModal').style.display = 'none';
+  document.removeEventListener('keydown', handleShareKey);
+}
+
+function handleShareKey(e) {
+  if (e.key === 'Escape') hideShareModal();
+}
+
+async function copyShareUrl() {
+  const url = shareUrl();
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('Link copied');
+  } catch (err) {
+    toast('Couldn\'t copy — select the link and copy it manually', true);
+  }
+}
+
+/* ============================================================
+   Go
+============================================================ */
+boot();
+</script>
+</body>
+</html>
