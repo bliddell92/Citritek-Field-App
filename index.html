@@ -1,0 +1,4388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ea580c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Citritek Field">
+<title>Citritek Field App</title>
+<style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* -------------------------------------------------------------
+     Design tokens
+  ------------------------------------------------------------- */
+  :root {
+    --bg:        #f5f5f4;
+    --surface:   #ffffff;
+    --fg:        #1c1917;
+    --fg-soft:   #44403c;
+    --muted:     #78716c;
+    --border:    #e7e5e4;
+    --border-hi: #d6d3d1;
+    --orange:    #ea580c;
+    --orange-d:  #c2410c;
+    --orange-l:  #fff7ed;
+    --green:     #16a34a;
+    --amber:     #ca8a04;
+    --red:       #dc2626;
+    --shadow:    0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    min-height: 100vh;
+    /* Safe area padding for notched phones */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* -------------------------------------------------------------
+     Layout — single column, max-width on tablet+
+  ------------------------------------------------------------- */
+  .app { max-width: 560px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* -------------------------------------------------------------
+     Header
+  ------------------------------------------------------------- */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    padding-top: calc(12px + env(safe-area-inset-top));
+    display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .header::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0;
+    height: 3px; background: var(--orange);
+  }
+  .header .logo {
+    width: 32px; height: 32px; border-radius: 6px;
+    display: block; flex-shrink: 0;
+    object-fit: contain;
+  }
+  .header .title { font-size: 15px; font-weight: 600; }
+  .header .subtitle { font-size: 12px; color: var(--muted); }
+  .header .back {
+    background: none; border: 0; padding: 6px 10px; margin-left: -10px;
+    color: var(--fg); font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .header .back:hover { color: var(--orange); }
+  .header .stale {
+    margin-left: auto; font-size: 11px; color: var(--amber); font-weight: 500;
+  }
+
+  /* -------------------------------------------------------------
+     Screens — exactly one visible at any time
+  ------------------------------------------------------------- */
+  .screen { display: none; flex: 1; padding: 16px; }
+  .screen.active { display: block; }
+
+  .screen h2 {
+    font-size: 18px; font-weight: 600; margin: 4px 0 4px 0;
+  }
+  .screen .lede {
+    font-size: 14px; color: var(--muted); margin: 0 0 16px 0;
+  }
+
+  /* -------------------------------------------------------------
+     Cards / list rows
+  ------------------------------------------------------------- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+    transition: border-color 0.1s, transform 0.05s;
+  }
+  .card:active { transform: scale(0.99); }
+  .card:hover { border-color: var(--border-hi); }
+  .card.selected {
+    border-color: var(--orange);
+    background: var(--orange-l);
+  }
+  .card .card-title {
+    font-size: 16px; font-weight: 600; margin: 0;
+  }
+  .card .card-sub {
+    font-size: 13px; color: var(--muted); margin: 4px 0 0 0;
+  }
+  .card .card-meta {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .pill {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 999px;
+    background: var(--bg); color: var(--fg-soft);
+    border: 1px solid var(--border);
+  }
+  .pill.orange { background: var(--orange-l); color: var(--orange-d); border-color: #fed7aa; }
+  .pill.green  { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+  .pill.amber  { background: #fef3c7; color: #a16207; border-color: #fde68a; }
+  .pill.red    { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+
+  /* -------------------------------------------------------------
+     Buttons
+  ------------------------------------------------------------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 16px; border-radius: 8px;
+    font: inherit; font-weight: 600; font-size: 15px;
+    border: 0; cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.1s;
+  }
+  .btn-primary { background: var(--orange); color: white; }
+  .btn-primary:hover { background: var(--orange-d); }
+  .btn-primary:disabled { background: var(--border-hi); cursor: not-allowed; }
+  .btn-secondary {
+    background: var(--surface); color: var(--fg); border: 1px solid var(--border-hi);
+  }
+  .btn-secondary:hover { background: var(--bg); }
+  .btn-block { width: 100%; }
+  .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-row > * { flex: 1; }
+
+  /* -------------------------------------------------------------
+     Forms
+  ------------------------------------------------------------- */
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block; font-size: 13px; font-weight: 500;
+    color: var(--fg-soft); margin-bottom: 6px;
+  }
+  .field input, .field select {
+    width: 100%; padding: 11px 12px; font: inherit;
+    background: var(--surface); color: var(--fg);
+    border: 1px solid var(--border-hi); border-radius: 8px;
+  }
+  .field input:focus, .field select:focus {
+    outline: 2px solid var(--orange); outline-offset: -1px;
+    border-color: var(--orange);
+  }
+
+  /* -------------------------------------------------------------
+     Search
+  ------------------------------------------------------------- */
+  .search {
+    position: sticky; top: calc(57px + env(safe-area-inset-top));
+    background: var(--bg); padding: 8px 0 12px 0; z-index: 5;
+  }
+  .search input {
+    width: 100%; padding: 10px 14px; font: inherit; font-size: 15px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  /* -------------------------------------------------------------
+     Section headings inside lists
+  ------------------------------------------------------------- */
+  .section-head {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--muted);
+    padding: 12px 4px 8px 4px;
+  }
+
+  /* -------------------------------------------------------------
+     Empty state
+  ------------------------------------------------------------- */
+  .empty {
+    text-align: center; padding: 40px 20px; color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* -------------------------------------------------------------
+     Visit summary block (shown on home screen if in-progress)
+  ------------------------------------------------------------- */
+  .resume {
+    background: var(--orange-l);
+    border: 1px solid #fed7aa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .resume .resume-title {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--orange-d);
+  }
+  .resume .resume-site {
+    font-size: 16px; font-weight: 600; margin: 2px 0;
+  }
+
+  /* -------------------------------------------------------------
+     Toast / inline error
+  ------------------------------------------------------------- */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--fg); color: white; padding: 10px 16px;
+    border-radius: 8px; font-size: 14px; z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    max-width: 90%;
+  }
+  .toast.error { background: var(--red); }
+
+  /* ---- Additions for the unified app ---- */
+  .wt-card { position: relative; }
+  .wt-card.planned {
+    opacity: 0.5; cursor: not-allowed; background: var(--bg);
+  }
+  .wt-card.planned:active { transform: none; }
+  .wt-group {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--muted);
+    padding: 14px 4px 8px 4px;
+  }
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .wi-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+  }
+  .wi-row .wi-main { flex: 1; min-width: 0; }
+  .wi-row .wi-title { font-weight: 600; font-size: 15px; }
+  .wi-row .wi-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .wi-row .wi-del {
+    background: none; border: 0; color: var(--muted);
+    font-size: 18px; cursor: pointer; padding: 4px 8px; line-height: 1;
+  }
+  .wi-row .wi-del:hover { color: var(--red); }
+  .locked {
+    background: var(--bg); color: var(--fg-soft);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 11px 12px; font-size: 15px;
+  }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .mismatch {
+    background: #fee2e2; border: 1px solid #fecaca; border-radius: 10px;
+    padding: 10px 12px; margin-bottom: 12px;
+  }
+  .mismatch .mm-title {
+    font-size: 13px; font-weight: 700; color: #b91c1c;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .mismatch .mm-body { font-size: 13px; line-height: 1.35; color: #7f1d1d; margin-top: 3px; }
+  .mismatch code {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px;
+    background: rgba(255,255,255,0.6); padding: 1px 5px; border-radius: 4px;
+  }
+  /* -------------------------------------------------------------
+     "Open on phone" helper + QR modal — lifted verbatim from the
+     Bristol Water app so it looks identical to what Tom and Ben use.
+  ------------------------------------------------------------- */
+  .home-share {
+    margin-top: 32px; padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .btn-share {
+    background: transparent; border: 0; padding: 8px 14px;
+    color: var(--muted); font-size: 13px; cursor: pointer;
+    font: inherit; font-size: 13px;
+  }
+  .btn-share:hover { color: var(--fg); }
+
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+    z-index: 100; display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+  }
+  .modal-card {
+    background: white; border-radius: 12px; width: 100%; max-width: 360px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+  }
+  .modal-title { font-weight: 600; font-size: 15px; }
+  .modal-close {
+    background: transparent; border: 0; font-size: 18px; cursor: pointer;
+    color: var(--muted); padding: 4px 8px;
+  }
+  .modal-body { padding: 20px 16px 18px; }
+  .qr-holder {
+    background: white; padding: 12px; border: 1px solid var(--border);
+    border-radius: 8px; margin: 0 auto 14px;
+    width: fit-content;
+    min-height: 220px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qr-holder img { display: block; max-width: 220px; height: auto; }
+  .qr-holder svg { display: block; width: 220px; height: 220px; }
+  .modal-hint {
+    text-align: center; font-size: 13px; color: var(--muted); margin: 0 0 12px;
+  }
+  .modal-url {
+    padding: 8px 10px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; font-size: 12px; color: var(--fg-soft);
+    word-break: break-all; text-align: center;
+    margin-bottom: 12px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+
+  .verfoot {
+    text-align: center; padding: 4px 12px 10px 12px;
+    font-size: 12px; color: var(--muted);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    -webkit-user-select: all; user-select: all;
+  }
+  .seg {
+    display: flex; gap: 6px; margin-bottom: 6px;
+  }
+  .seg button {
+    flex: 1; padding: 10px 6px; font: inherit; font-weight: 600; font-size: 14px;
+    background: var(--surface); color: var(--fg-soft);
+    border: 1px solid var(--border-hi); border-radius: 8px; cursor: pointer;
+  }
+  .seg button.on {
+    background: var(--orange); color: #fff; border-color: var(--orange);
+  }
+  .seg-blurb { font-size: 12px; color: var(--muted); margin: 0 0 12px 2px; min-height: 16px; }
+  .newflag {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 999px; margin-left: 6px;
+    background: #fef3c7; color: #a16207; border: 1px solid #fde68a;
+  }
+
+  /* ===========================================================
+     Task list, remedials and device styles — lifted verbatim
+     from the Bristol Water app.
+  =========================================================== */
+  /* -------------------------------------------------------------
+     Visit progress bar (sticky under header)
+  ------------------------------------------------------------- */
+  .progress {
+    position: sticky;
+    top: calc(57px + env(safe-area-inset-top));
+    background: var(--bg);
+    padding: 8px 0 12px 0;
+    z-index: 5;
+    margin: -16px -16px 8px -16px;
+    padding-left: 16px; padding-right: 16px;
+  }
+  .progress-bar {
+    height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--orange); transition: width 0.2s ease;
+  }
+  .progress-text {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--muted); margin-top: 6px;
+  }
+
+  /* -------------------------------------------------------------
+     Open remedials banner
+  ------------------------------------------------------------- */
+  .remedials-banner {
+    background: #fef3c7; border: 1px solid #fde68a;
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;
+  }
+  .remedials-banner .rb-title {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.04em; color: #a16207; margin-bottom: 4px;
+  }
+  .remedials-banner ul { margin: 4px 0 0 0; padding-left: 16px; font-size: 13px; }
+  .remedials-banner li { margin: 2px 0; color: var(--fg-soft); }
+
+  /* -------------------------------------------------------------
+     Task group (frequency cluster)
+  ------------------------------------------------------------- */
+  .task-group { margin-bottom: 20px; }
+  .task-group-head {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted);
+    padding: 8px 4px; margin-top: 4px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .task-group-head .group-count { font-size: 11px; font-weight: 500; color: var(--muted); }
+
+  /* -------------------------------------------------------------
+     Worklist section head — orange section labels above outlets and
+     site-level items. Same visual weight so the technician sees clear
+     grouping.
+  ------------------------------------------------------------- */
+  .worklist-section-head {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--orange-d);
+    padding: 12px 4px 6px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  /* Additional class hooks so outlet/site-level cards can be styled
+     differently in future without touching the base task-block styles. */
+  .outlet-card { }
+  .site-level-card { }
+
+  /* -------------------------------------------------------------
+     Task block — one task definition (e.g. "Clean & descale MF eyebaths")
+     Contains a header with label + count, then asset rows under it.
+  ------------------------------------------------------------- */
+  .task-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .task-block-head {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 10px;
+  }
+  .task-block-head .tb-label { font-weight: 600; font-size: 14px; line-height: 1.3; }
+  .task-block-head .tb-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* -------------------------------------------------------------
+     Asset row (inside a task block)
+  ------------------------------------------------------------- */
+  .asset-row {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+  }
+  .asset-row:last-child { border-bottom: 0; }
+  .asset-row:hover { background: #fafaf9; }
+  .asset-row.expanded { background: #fafaf9; }
+
+  .asset-row-summary {
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .asset-row-summary .ar-name { flex: 1; min-width: 0; }
+  .asset-row-summary .ar-name-text { font-size: 14px; font-weight: 500; }
+  .asset-row-summary .ar-can { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .asset-row-summary .ar-status { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
+
+  /* The status indicator dot */
+  .status-dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    border: 1.5px solid var(--border-hi);
+    background: var(--surface); color: var(--muted);
+    flex-shrink: 0;
+  }
+  .status-dot.done { background: var(--green); color: white; border-color: var(--green); }
+  .status-dot.unable { background: var(--red); color: white; border-color: var(--red); }
+  .status-dot.notneeded { background: var(--muted); color: white; border-color: var(--muted); }
+
+  /* Condition pill for completed assets */
+  .condition-pill {
+    font-size: 11px; padding: 2px 7px; border-radius: 999px; font-weight: 500;
+  }
+  .condition-pill.satisfactory { background: #dcfce7; color: #15803d; }
+  .condition-pill.minor        { background: #fef3c7; color: #a16207; }
+  .condition-pill.attention    { background: #ffedd5; color: #9a3412; }
+  .condition-pill.urgent       { background: #fee2e2; color: #991b1b; }
+
+  /* Photo count badge */
+  .photo-badge {
+    font-size: 11px; padding: 2px 6px; border-radius: 4px;
+    background: var(--bg); color: var(--muted);
+    display: inline-flex; align-items: center; gap: 3px;
+  }
+
+  /* -------------------------------------------------------------
+     Asset row expanded (the inline form)
+  ------------------------------------------------------------- */
+  .asset-row-form {
+    padding: 0 14px 14px 14px;
+    background: #fafaf9;
+  }
+  .asset-row-form label {
+    font-size: 12px; font-weight: 600; color: var(--fg-soft);
+    text-transform: uppercase; letter-spacing: 0.04em;
+    display: block; margin: 12px 0 6px 0;
+  }
+
+  /* Status segmented control */
+  .seg {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 4px;
+    background: var(--border); padding: 3px; border-radius: 8px;
+  }
+  .seg button {
+    background: transparent; color: var(--muted);
+    border: 0; padding: 8px 4px; font: inherit; font-size: 13px;
+    border-radius: 6px; cursor: pointer; font-weight: 500;
+  }
+  .seg button.active.done       { background: var(--green); color: white; }
+  .seg button.active.unable     { background: var(--red); color: white; }
+  .seg button.active.notneeded  { background: var(--muted); color: white; }
+  .seg button.active.pending    { background: var(--surface); color: var(--fg); }
+
+  /* Condition segmented control */
+  .seg.cond { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .seg.cond button.active.satisfactory { background: var(--green); color: white; }
+  .seg.cond button.active.minor        { background: var(--amber); color: white; }
+  .seg.cond button.active.attention    { background: #ea580c; color: white; }
+  .seg.cond button.active.urgent       { background: var(--red); color: white; }
+
+  textarea.notes {
+    width: 100%; min-height: 60px; padding: 8px 10px;
+    font: inherit; font-size: 14px; line-height: 1.4;
+    background: var(--surface); border: 1px solid var(--border-hi);
+    border-radius: 6px; resize: vertical;
+  }
+  textarea.notes:focus {
+    outline: 2px solid var(--orange); outline-offset: -1px; border-color: var(--orange);
+  }
+
+  /* Photo strip */
+  .photo-strip {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;
+  }
+  .photo-thumb {
+    position: relative;
+    width: 72px; height: 72px;
+    border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-thumb .photo-del {
+    position: absolute; top: 2px; right: 2px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(0,0,0,0.6); color: white;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 14px; line-height: 1; font-weight: 700;
+    border: 0;
+  }
+  .photo-add-btn {
+    width: 72px; height: 72px; border-radius: 6px;
+    background: var(--surface); border: 1px dashed var(--border-hi);
+    color: var(--muted); font-size: 24px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .photo-add-btn input { display: none; }
+
+  /* Add asset button (inside task block) */
+  .add-asset-btn {
+    display: block; width: 100%;
+    padding: 12px 14px; background: transparent;
+    border: 0; border-top: 1px dashed var(--border);
+    color: var(--orange); font: inherit; font-size: 14px; font-weight: 500;
+    cursor: pointer; text-align: center;
+  }
+  .add-asset-btn:hover { background: var(--orange-l); }
+
+  /* Add-asset form panel */
+  .add-asset-form {
+    padding: 12px 14px;
+    background: var(--orange-l);
+    border-top: 1px solid #fed7aa;
+  }
+
+  /* Open remedial inline note inside an asset row */
+  .remedial-note {
+    background: #fef3c7;
+    border-left: 3px solid var(--amber);
+    padding: 8px 10px; margin-top: 8px;
+    border-radius: 4px;
+    font-size: 13px; color: var(--fg-soft);
+  }
+  .remedial-note .rn-label {
+    font-size: 11px; font-weight: 600; color: #a16207;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  /* Visit footer actions */
+  .visit-footer {
+    margin-top: 24px; padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* -------------------------------------------------------------
+     Visit complete screen — celebratory summary + next-site button
+  ------------------------------------------------------------- */
+  .complete-hero {
+    text-align: center; padding: 32px 12px 20px;
+  }
+  .complete-tick {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--green); color: white;
+    font-size: 40px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .complete-title {
+    font-size: 20px; font-weight: 700; color: var(--fg);
+    margin-bottom: 4px;
+  }
+  .complete-sub {
+    font-size: 13px; color: var(--muted);
+  }
+  .complete-stats {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .complete-stat-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 6px 0;
+  }
+  .complete-stat-row + .complete-stat-row {
+    border-top: 1px solid var(--border);
+  }
+  .complete-stat-row .cs-label {
+    font-size: 13px; color: var(--muted);
+  }
+  .complete-stat-row .cs-value {
+    font-size: 15px; font-weight: 600; color: var(--fg);
+  }
+  .complete-stat-row.warn .cs-value {
+    color: var(--red);
+  }
+
+  /* -------------------------------------------------------------
+     "Something missed" badge on recent visits
+  ------------------------------------------------------------- */
+  .pill.red {
+    background: #fee2e2; color: #991b1b;
+    border: 1px solid #fecaca;
+  }
+
+  /* -------------------------------------------------------------
+     Export slot on home screen
+  ------------------------------------------------------------- */
+  .export-slot {
+    margin-top: 16px; padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .export-slot .es-title {
+    font-size: 13px; font-weight: 600; margin-bottom: 4px;
+  }
+  .export-slot .es-sub {
+    font-size: 12px; color: var(--muted); margin-bottom: 10px;
+  }
+
+  /* Storage indicator — subtle under the export slot, becomes prominent
+     as we approach browser storage quota */
+  .storage-slot {
+    margin-top: 10px; padding: 8px 12px;
+    font-size: 12px; color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .storage-slot .ss-bar {
+    flex: 1; height: 4px; background: var(--border); border-radius: 2px;
+    overflow: hidden;
+  }
+  .storage-slot .ss-fill {
+    height: 100%; background: var(--green); transition: width 250ms;
+  }
+  .storage-slot.warn { background: #fef3c7; border-color: #fde68a; color: #92400e; }
+  .storage-slot.warn .ss-fill { background: var(--amber); }
+  .storage-slot.crit { background: #fee2e2; border-color: #fecaca; color: #991b1b; font-weight: 600; }
+  .storage-slot.crit .ss-fill { background: var(--red); }
+  ------------------------------------------------------------- */
+  .remedials-banner .rem-item {
+    background: white; border: 1px solid #fde68a; border-radius: 6px;
+    padding: 10px 12px; margin-top: 8px;
+  }
+  .remedials-banner .rem-item .rem-asset {
+    font-weight: 600; font-size: 13px;
+  }
+  .remedials-banner .rem-item .rem-note {
+    font-size: 13px; color: var(--fg-soft); margin-top: 2px;
+  }
+  .remedials-banner .rem-actions {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;
+    background: var(--border); padding: 3px; border-radius: 6px;
+    margin-top: 8px;
+  }
+  .remedials-banner .rem-actions button {
+    background: transparent; border: 0; padding: 7px 4px;
+    font: inherit; font-size: 12px; color: var(--muted); font-weight: 500;
+    border-radius: 4px; cursor: pointer;
+  }
+  .remedials-banner .rem-actions button.active.resolved   { background: var(--green); color: white; }
+  .remedials-banner .rem-actions button.active.updated    { background: var(--amber); color: white; }
+  .remedials-banner .rem-actions button.active.open       { background: var(--surface); color: var(--fg); border: 1px solid var(--border); }
+  .remedials-banner textarea.rem-update-note {
+    width: 100%; min-height: 50px; margin-top: 6px;
+    padding: 6px 8px; font: inherit; font-size: 13px;
+    background: var(--surface); border: 1px solid #fde68a; border-radius: 4px; resize: vertical;
+  }
+
+  /* -------------------------------------------------------------
+     Debug log — small pill in the bottom-right, opens a modal with
+     recent log entries. Temporary for diagnosing the photo issue;
+     will be removed once we know what's wrong.
+  ------------------------------------------------------------- */
+  .debug-pill {
+    position: fixed; bottom: 14px; right: 14px; z-index: 90;
+    background: rgba(30, 30, 30, 0.82); color: white;
+    font-size: 11px; font-family: ui-monospace, monospace;
+    padding: 6px 10px; border-radius: 999px;
+    border: 0; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+  .debug-pill .dp-count {
+    background: var(--red); color: white; border-radius: 999px;
+    padding: 1px 6px; margin-left: 4px; font-weight: 600;
+    display: none;
+  }
+  .debug-pill.has-errors .dp-count { display: inline; }
+
+  .debug-modal .modal-body {
+    padding: 12px 0 0; max-height: 70vh; overflow-y: auto;
+  }
+  .debug-log {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 11px; line-height: 1.4;
+    padding: 8px 12px;
+  }
+  .debug-log .dl-empty {
+    color: var(--muted); text-align: center; padding: 20px;
+    font-family: inherit;
+  }
+  .debug-log .dl-entry {
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+  }
+  .debug-log .dl-entry:last-child { border-bottom: 0; }
+  .debug-log .dl-time {
+    color: var(--muted); font-size: 10px; margin-right: 6px;
+  }
+  .debug-log .dl-entry.info   .dl-msg { color: var(--fg); }
+  .debug-log .dl-entry.step   .dl-msg { color: #2563eb; }
+  .debug-log .dl-entry.ok     .dl-msg { color: #16a34a; }
+  .debug-log .dl-entry.error  .dl-msg { color: var(--red); font-weight: 600; }
+  .debug-log .dl-detail {
+    color: var(--muted); font-size: 10px; margin-top: 2px;
+    padding-left: 8px; word-break: break-all; white-space: pre-wrap;
+  }
+  .debug-actions {
+    display: flex; gap: 8px; padding: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .debug-actions button { flex: 1; font-size: 12px; }
+
+  /* -------------------------------------------------------------
+     Device Maintenance section (sits at the bottom of the task list)
+  ------------------------------------------------------------- */
+  .device-section {
+    margin-top: 24px; padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .device-section .ds-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .device-section .ds-title {
+    font-size: 15px; font-weight: 600; color: var(--fg);
+  }
+  .device-section .ds-count {
+    font-size: 12px; color: var(--muted);
+  }
+  .device-section .ds-empty {
+    padding: 16px; text-align: center;
+    background: var(--surface);
+    border: 1px dashed var(--border); border-radius: 8px;
+    color: var(--muted); font-size: 13px; margin-bottom: 10px;
+  }
+  .device-card {
+    background: white; border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px; margin-bottom: 8px;
+  }
+  .device-card .dc-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .device-card .dc-code { font-weight: 600; font-size: 14px; }
+  .device-card .dc-location { color: var(--muted); font-size: 12px; }
+  .device-card .dc-works {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
+  }
+  .device-card .dc-work-chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 8px; font-size: 11px;
+  }
+  .device-card .dc-notes {
+    font-size: 12px; color: var(--fg-soft); margin-top: 6px;
+    font-style: italic;
+  }
+  .device-card .dc-actions {
+    display: flex; gap: 6px; margin-top: 10px;
+  }
+  .device-card .dc-actions button {
+    flex: 1; font-size: 12px; padding: 6px 8px;
+  }
+
+  /* Device add/edit form */
+  .device-form {
+    background: white; border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px; margin-bottom: 10px;
+  }
+  .device-form h4 {
+    margin: 0 0 10px 0; font-size: 14px; color: var(--fg);
+  }
+  .device-form label {
+    display: block; font-size: 12px; font-weight: 500;
+    color: var(--muted); margin-top: 8px; margin-bottom: 4px;
+  }
+  .device-form input[type="text"], .device-form textarea {
+    width: 100%; padding: 8px 10px; font: inherit; font-size: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; box-sizing: border-box;
+  }
+  .device-form textarea { min-height: 60px; resize: vertical; }
+  .device-form .works-checkboxes {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    margin-top: 4px;
+  }
+  .device-form .works-checkboxes label {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 8px 10px; border-radius: 6px; cursor: pointer;
+    font-size: 13px; color: var(--fg); font-weight: 400;
+    text-transform: none; letter-spacing: normal;
+    margin: 0;
+  }
+  .device-form .works-checkboxes input[type="checkbox"] {
+    margin: 0; accent-color: var(--orange);
+  }
+  .device-form .form-actions {
+    display: flex; gap: 8px; margin-top: 14px;
+  }
+  .device-form .form-actions button { flex: 1; }
+  .device-form .df-photos { margin-top: 6px; }
+
+  /* ---- Installation form ---- */
+  .inst-lbl { font-size:11px; font-weight:600; color:var(--muted);
+              display:block; margin-bottom:4px; text-transform:uppercase;
+              letter-spacing:0.03em; }
+  .inst-opt { font-weight:400; text-transform:none; letter-spacing:0; }
+  .inst-sec-del { background:none; border:0; color:var(--muted);
+                  font-size:15px; cursor:pointer; padding:2px 6px; line-height:1; }
+  .inst-sec-del:hover { color:var(--red); }
+  .chan-block { padding:0 14px 10px; }
+  .chan-row { display:flex; gap:6px; align-items:center; margin-bottom:6px; }
+  .chan-row input { flex:1; min-width:0; }
+  .csv-help { font-size:12px; color:var(--muted); margin:0 0 10px; }
+  .csv-text { width:100%; min-height:150px; font-family:ui-monospace,Menlo,Consolas,monospace;
+              font-size:12px; padding:10px; border:1px solid var(--border-hi);
+              border-radius:8px; resize:vertical; box-sizing:border-box; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="header">
+    <button class="back" id="backBtn" style="display: none">‹ Back</button>
+    <img class="logo" alt="Citritek" src="data:image/png;base64,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">
+    <div>
+      <div class="title">Citritek</div>
+      <div class="subtitle" id="headerSubtitle">Field App</div>
+    </div>
+    <div class="stale" id="staleIndicator" style="display: none">⚠ Offline</div>
+  </header>
+
+  <!-- ========================= HOME ========================= -->
+  <section class="screen active" data-screen="home">
+    <div id="mismatchSlot"></div>
+    <div id="resumeSlot"></div>
+    <div id="exportSlot"></div>
+
+    <button class="btn btn-primary btn-block" onclick="goWorkType()">
+      + New job
+    </button>
+
+    <div class="section-head">Recent visits</div>
+    <div id="recentList">
+      <div class="empty">No visits on this device yet.</div>
+    </div>
+
+    <div class="home-share">
+      <button class="btn-share" type="button" onclick="showShareModal()">
+        📱 Open this app on a phone
+      </button>
+
+      <!-- Read this out if anything looks wrong. It says exactly what's running. -->
+      <div class="verfoot" id="versionFooter"></div>
+    </div>
+  </section>
+
+  <!-- QR handoff. The code is generated in the browser by ctk_qr.js, so this
+       works with no internet connection and nothing is sent to a third party. -->
+  <div id="shareModal" class="modal-backdrop" style="display:none"
+       onclick="if(event.target===this)hideShareModal()">
+    <div class="modal-card">
+      <div class="modal-head">
+        <span class="modal-title">Open on a phone</span>
+        <button class="modal-close" onclick="hideShareModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="qr-holder" id="qrHolder"></div>
+        <p class="modal-hint">Scan this with your phone's camera to open the app there.</p>
+        <div class="modal-url" id="qrUrl"></div>
+        <button class="btn btn-secondary btn-block" onclick="copyShareUrl()">Copy link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== WORK TYPE ======================== -->
+  <section class="screen" data-screen="workType">
+    <h2>What are you doing?</h2>
+    <p class="lede">Pick the job type. The right form appears next.</p>
+    <div id="workTypeList"></div>
+  </section>
+
+  <!-- ===================== SITE PICKER ====================== -->
+  <!-- Only shown for work types backed by reference data (Bristol Water). -->
+  <section class="screen" data-screen="sitePicker">
+    <h2 id="spHeading">Which visit?</h2>
+    <p class="lede" id="sitePickerLede">Loading sites…</p>
+
+    <div class="seg" id="cadenceSeg"></div>
+    <p class="seg-blurb" id="cadenceBlurb"></p>
+
+    <div id="siteSearchWrap" class="search" style="display:none">
+      <input type="search" id="siteSearch" placeholder="Search by name or postcode" oninput="filterSites()">
+    </div>
+    <div id="siteList"></div>
+
+    <div id="cadenceContinue" style="display:none">
+      <button class="btn btn-primary btn-block" onclick="confirmCadenceOnly()">Continue</button>
+    </div>
+  </section>
+
+  <!-- ======================= SETUP ========================== -->
+  <section class="screen" data-screen="setup">
+    <h2 id="setupHeading">Job details</h2>
+    <p class="lede" id="setupLede">Last step before you start.</p>
+
+    <div id="setupClientField" class="field">
+      <label for="fClient">Client</label>
+      <input type="text" id="fClient" list="dlClient" autocomplete="off" placeholder="e.g. Dishoom">
+      <datalist id="dlClient"></datalist>
+      <div class="hint" id="clientHint"></div>
+    </div>
+
+    <div id="setupClientLocked" class="field" style="display:none">
+      <label>Client</label>
+      <div class="locked" id="lockedClient"></div>
+    </div>
+
+    <div id="setupSiteField" class="field">
+      <label for="fSite">Site</label>
+      <input type="text" id="fSite" list="dlSite" autocomplete="off" placeholder="e.g. Battersea (D10)">
+      <datalist id="dlSite"></datalist>
+    </div>
+
+    <div id="setupSiteLocked" class="field" style="display:none">
+      <label>Site</label>
+      <div class="locked" id="lockedSite"></div>
+    </div>
+
+    <div id="setupAddressField" class="field">
+      <label for="fAddress">Address <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+      <input type="text" id="fAddress" autocomplete="off" placeholder="Appears on the report">
+    </div>
+
+    <div class="field">
+      <label for="fDate">Date</label>
+      <input type="date" id="fDate">
+    </div>
+
+    <div class="field">
+      <label for="fTech">Technician</label>
+      <select id="fTech">
+        <option value="">— Select technician —</option>
+        <option>Tom Wharton</option>
+        <option>Ben Liddell</option>
+        <option>Sam Liddell</option>
+        <option>Ian Mein</option>
+      </select>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goBack()">Back</button>
+      <button class="btn btn-primary" onclick="startVisit()">Start job</button>
+    </div>
+  </section>
+
+  <!-- ======================== VISIT ========================= -->
+  <section class="screen" data-screen="visitOverview">
+    <div id="visitHeader"></div>
+    <div class="section-head">Work items</div>
+    <div id="workItemList"></div>
+
+    <button class="btn btn-secondary btn-block" onclick="goAddWorkItem()" style="margin-top:4px">
+      + Add work item at this site
+    </button>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goHome()">Home</button>
+    </div>
+  </section>
+
+  <section class="screen" data-screen="visit">
+    <div class="progress" id="visitProgress">
+      <div class="progress-bar"><div class="progress-bar-fill" id="progressFill" style="width: 0%"></div></div>
+      <div class="progress-text">
+        <span id="progressText">0 of 0 tasks done</span>
+        <span id="progressMeta"></span>
+      </div>
+    </div>
+
+    <h2 id="visitHeading">Visit</h2>
+    <p class="lede" id="visitLede"></p>
+
+    <div id="remedialsBanner"></div>
+    <div id="taskList"></div>
+
+    <div class="visit-footer">
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goHome()">Save and exit</button>
+        <button class="btn btn-primary" onclick="completeVisit()">Mark visit complete</button>
+      </div>
+      <div style="margin-top: 8px">
+        <button class="btn btn-secondary btn-block" onclick="abandonVisit()" style="color: var(--red); border-color: #fecaca;">Discard visit</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: Visit complete confirmation
+
+       Shown after "Mark visit complete" so the technician can jump
+       straight to the next site without re-picking visit type, date,
+       and technician.
+  ============================================================ -->
+  <section class="screen" data-screen="visitComplete">
+    <div class="complete-hero">
+      <div class="complete-tick">✓</div>
+      <div class="complete-title" id="completeTitle">Visit complete</div>
+      <div class="complete-sub" id="completeSub"></div>
+    </div>
+
+    <div class="complete-stats" id="completeStats"></div>
+
+    <div style="margin-top: 24px;">
+      <button class="btn btn-primary btn-block" onclick="nextSite()">+ Next site</button>
+      <div style="margin-top: 8px;">
+        <button class="btn btn-secondary btn-block" onclick="goHome()">Back to home</button>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="screen" data-screen="install">
+    <div class="progress">
+      <div class="progress-bar"><div class="progress-bar-fill" id="installProgressFill" style="width:0%"></div></div>
+      <div class="progress-text">
+        <span id="installProgressText">0 of 0 devices addressed</span>
+        <span id="installProgressMeta"></span>
+      </div>
+    </div>
+
+    <h2 id="installHeading">Installation</h2>
+    <p class="lede" id="installLede"></p>
+
+    <div id="installBody"></div>
+
+    <div class="visit-footer">
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goHome()">Save and exit</button>
+        <button class="btn btn-primary" onclick="completeInstall()">Mark job complete</button>
+      </div>
+      <div style="margin-top:8px">
+        <button class="btn btn-secondary btn-block" onclick="nextDayAtSite()">
+          + Next day at this site
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div id="csvModal" class="modal-backdrop" style="display:none"
+       onclick="if(event.target===this)closeCsvImport()">
+    <div class="modal-card">
+      <div class="modal-head">
+        <span class="modal-title">Paste device list</span>
+        <button class="modal-close" onclick="closeCsvImport()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="csv-help">One device per line, from a spreadsheet or CSV:<br>
+          <strong>Section, Code, Name, Channel, Measuring point</strong><br>
+          A header row is ignored. Devices already listed are skipped.</p>
+        <textarea class="csv-text" id="csvText"
+          placeholder="Level 2 Stroke Ward,NMH/003/001,Bay 1 Sink,CH1,HWS&#10;Level 2 Stroke Ward,NMH/003/002,Bay 2 Sink,CH1,HWS"></textarea>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-secondary" onclick="closeCsvImport()">Cancel</button>
+          <button class="btn btn-primary" onclick="runCsvImport()">Import</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="ctk_qr.js"></script>
+<script src="ctk_schema.js"></script>
+<script src="ctk_storage.js"></script>
+<script>
+'use strict';
+
+/* ============================================================
+   App state
+============================================================ */
+/* The build this file belongs to. ctk_schema.js and ctk_storage.js each
+   declare the same constant; checkBuilds() below shouts if they disagree. */
+const APP_BUILD = '0.3.2';
+window.APP_BUILD = APP_BUILD;   // reachable from the console for debugging
+
+const APP = {
+  sites: null,
+  isStaleData: false,
+  draft: {                 // the visit being created
+    type: null,            // work type key
+    site: null,            // resolved reference site object, when applicable
+    cadence: null,         // quarterly / six_monthly / annual, for BW visits
+  },
+  currentVisitId: null,
+  addingToVisit: null,     // set when adding a 2nd work item to an existing visit
+  screenStack: ['home'],
+};
+window.APP = APP;   // reachable from the console for debugging
+
+/* ============================================================
+   Screen routing
+============================================================ */
+function showScreen(name, push = true) {
+  document.querySelectorAll('.screen').forEach((s) => {
+    s.classList.toggle('active', s.dataset.screen === name);
+  });
+  if (push) APP.screenStack.push(name);
+  updateBackButton();
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  if (APP.screenStack.length <= 1) return;
+  APP.screenStack.pop();
+  showScreen(APP.screenStack[APP.screenStack.length - 1], false);
+}
+
+function goHome() {
+  document.getElementById('headerSubtitle').textContent = 'Field App \u00b7 v' + APP_BUILD;
+  APP.screenStack = ['home'];
+  APP.draft = { type: null, site: null, cadence: null };
+  APP.addingToVisit = null;
+  showScreen('home', false);
+  refreshHome();
+}
+
+function updateBackButton() {
+  const cur = APP.screenStack[APP.screenStack.length - 1];
+  const show = cur !== 'home' && cur !== 'visit' && cur !== 'visitOverview' && cur !== 'visitComplete';
+  document.getElementById('backBtn').style.display = show ? 'flex' : 'none';
+}
+document.getElementById('backBtn').addEventListener('click', goBack);
+
+function toast(message, isError = false) {
+  const old = document.querySelector('.toast');
+  if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'toast' + (isError ? ' error' : '');
+  el.textContent = message;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   Boot
+============================================================ */
+/**
+ * Compare the build stamps of the three files. A mismatch means someone
+ * uploaded one file and not the others — which produces an app that looks
+ * fine but behaves like a mix of two versions. Loud, unmissable, and it
+ * names the file to replace.
+ */
+function checkBuilds() {
+  const parts = {
+    'index.html':     APP_BUILD,
+    'ctk_schema.js':  (typeof CTKSchema  !== 'undefined') ? CTKSchema.BUILD  : 'missing',
+    'ctk_storage.js': (typeof CTKStorage !== 'undefined') ? CTKStorage.BUILD : 'missing',
+    'ctk_qr.js':      (typeof CTKQR      !== 'undefined') ? CTKQR.BUILD      : 'missing',
+  };
+  const stale = Object.keys(parts).filter((f) => parts[f] !== APP_BUILD);
+
+  document.getElementById('versionFooter').textContent =
+    'v' + APP_BUILD + ' \u00b7 schema ' +
+    ((typeof CTKSchema !== 'undefined') ? CTKSchema.SCHEMA_VERSION : '?');
+
+  document.getElementById('headerSubtitle').textContent = 'Field App \u00b7 v' + APP_BUILD;
+
+  const slot = document.getElementById('mismatchSlot');
+  if (!stale.length) { slot.innerHTML = ''; return true; }
+
+  // Two different problems, and they need different fixes:
+  //   missing  - the file didn't load at all (wrong folder, or wrong case)
+  //   a version - the file loaded but is an older build
+  const absent  = stale.filter(function (f) { return parts[f] === 'missing'; });
+  const older   = stale.filter(function (f) { return parts[f] !== 'missing'; });
+
+  let line;
+  if (absent.length) {
+    line = absent.join(', ') + (absent.length === 1 ? " didn't load" : " didn't load") +
+           ' \u2014 check the file name and folder';
+  } else {
+    line = older.map(function (f) { return f + ' is v' + parts[f]; }).join(', ') +
+           ' \u2014 re-upload, then hard-refresh';
+  }
+
+  slot.innerHTML =
+    '<div class="mismatch">' +
+      '<div class="mm-title">\u26a0 Files out of step</div>' +
+      '<div class="mm-body">' + escapeHtml(line) + '</div>' +
+    '</div>';
+  return false;
+}
+
+async function boot() {
+  checkBuilds();
+  try {
+    const res = await CTKStorage.refreshReferenceData();
+    APP.isStaleData = !res.fresh;
+  } catch (err) {
+    APP.isStaleData = true;
+  }
+  document.getElementById('staleIndicator').style.display =
+    APP.isStaleData ? 'block' : 'none';
+
+  try {
+    await CTKStorage.runAutoClear();
+  } catch (err) { /* non-fatal */ }
+
+  await refreshHome();
+}
+
+/* ============================================================
+   Home
+============================================================ */
+async function refreshHome() {
+  let visits = [];
+  try { visits = await CTKStorage.getAllVisits(); }
+  catch (err) { toast('Could not load visits: ' + err.message, true); return; }
+
+  // In-progress banner
+  const resume = document.getElementById('resumeSlot');
+  const open = visits.filter((v) => v.status === 'in_progress');
+  if (open.length) {
+    const v = open[0];
+    resume.innerHTML =
+      '<div class="resume">' +
+        '<div class="resume-title">In progress</div>' +
+        '<div class="resume-site">' + escapeHtml(v.site) + '</div>' +
+        '<div class="card-sub">' + escapeHtml(v.date) + ' · ' + escapeHtml(v.technician) +
+          ' · ' + v.work_items.length + ' work item' + (v.work_items.length === 1 ? '' : 's') + '</div>' +
+        '<div class="btn-row">' +
+          '<button class="btn btn-primary" onclick="openVisitOverview(\'' + v.visit_id + '\')">Resume</button>' +
+        '</div>' +
+      '</div>';
+  } else {
+    resume.innerHTML = '';
+  }
+
+  await renderExportSlot();
+
+  // Recent list
+  const list = document.getElementById('recentList');
+  const recent = visits.filter((v) => v.status !== 'in_progress').slice(0, 12);
+  if (!recent.length) {
+    list.innerHTML = '<div class="empty">No completed visits on this device yet.</div>';
+    return;
+  }
+  list.innerHTML = recent.map((v) => {
+    const chips = v.work_items.map((wi) => {
+      const wt = CTKSchema.workType(wi.type);
+      return '<span class="pill">' + escapeHtml(wt ? wt.short : wi.type) + '</span>';
+    }).join('');
+    const statusPill = v.status === 'exported'
+      ? '<span class="pill green">Exported</span>'
+      : '<span class="pill orange">Ready to export</span>';
+    return '<div class="card" onclick="openVisitOverview(\'' + v.visit_id + '\')">' +
+      '<p class="card-title">' + escapeHtml(v.site) + '</p>' +
+      '<p class="card-sub">' + escapeHtml(v.client || '—') + ' · ' +
+        escapeHtml(v.date) + ' · ' + escapeHtml(v.technician) + '</p>' +
+      '<div class="chip-row">' + statusPill + chips + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ============================================================
+   Work type picker  — the FIRST choice the technician makes
+============================================================ */
+function goWorkType() {
+  renderWorkTypes();
+  showScreen('workType');
+}
+
+async function goAddWorkItem() {
+  // Adding a second job at a site we've already set up: skip the
+  // setup screen entirely and reuse client/site/date/technician.
+  // Set the flags SYNCHRONOUSLY first — if we awaited before setting them,
+  // a fast tap on a work type could arrive while addingToVisit was still
+  // null and start a whole new visit instead.
+  APP.addingToVisit = APP.currentVisitId;
+  APP.addingToVisitHasRef = !!(APP.currentVisitSiteRef);
+  goWorkType();
+}
+
+function renderWorkTypes() {
+  const types = CTKSchema.WORK_TYPES;
+  const bw = [], other = [], planned = [];
+
+  Object.keys(types).forEach((k) => {
+    const wt = types[k];
+    // When adding a second job to an existing visit, only offer types the
+    // envelope can actually support. A Bristol Water item needs a site_ref,
+    // which a typed job (Dishoom, Harper Water) doesn't have.
+    if (APP.addingToVisit && wt.site_source === 'reference' && !APP.addingToVisitHasRef) return;
+    if (wt.status === 'planned') planned.push(k);
+    else if (CTKSchema.isBWType(k)) bw.push(k);
+    else other.push(k);
+  });
+
+  function card(k) {
+    const wt = types[k];
+    const src = wt.site_source === 'reference'
+      ? 'Site list loaded automatically'
+      : 'You enter the client and site';
+    return '<div class="card wt-card" onclick="selectWorkType(\'' + k + '\')">' +
+      '<p class="card-title">' + escapeHtml(wt.label) + '</p>' +
+      '<p class="card-sub">' + src + '</p>' +
+    '</div>';
+  }
+
+  function plannedCard(k) {
+    const wt = types[k];
+    return '<div class="card wt-card planned">' +
+      '<p class="card-title">' + escapeHtml(wt.label) + '</p>' +
+      '<p class="card-sub">Not built yet</p>' +
+    '</div>';
+  }
+
+  let html = '';
+  if (other.length) {
+    html += '<div class="wt-group">General</div>' + other.map(card).join('');
+  }
+  if (bw.length) {
+    html += '<div class="wt-group">Bristol Water</div>' + bw.map(card).join('');
+  }
+  if (planned.length) {
+    html += '<div class="wt-group">Coming later</div>' + planned.map(plannedCard).join('');
+  }
+  document.getElementById('workTypeList').innerHTML = html;
+}
+
+async function selectWorkType(type) {
+  const wt = CTKSchema.workType(type);
+  if (!wt || wt.status !== 'live') { toast('That job type isn\'t built yet.'); return; }
+  APP.draft.type = type;
+  APP.draft.site = null;
+  APP.draft.cadence = null;
+
+  // Bristol Water always needs a cadence first — it decides which sites are
+  // eligible and which subtasks the technician sees.
+  if (wt.cadence_required) {
+    await goSitePicker();
+    return;
+  }
+
+  // Adding to an existing visit — no setup needed, the envelope is already there.
+  if (APP.addingToVisit) {
+    await appendWorkItem(type, null);
+    return;
+  }
+
+  await goSetup();
+}
+
+/** Add a work item to the visit already open, reusing its envelope. */
+async function appendWorkItem(type, cadence) {
+  const wt = CTKSchema.workType(type);
+  try {
+    const data = cadence
+      ? Object.assign(CTKSchema.emptyDataFor(type), { visit_type: cadence })
+      : undefined;
+    const wi = CTKSchema.createWorkItem(type, data);
+    await CTKStorage.addWorkItem(APP.addingToVisit, wi);
+    const visitId = APP.addingToVisit;
+    APP.addingToVisit = null;
+    APP.draft = { type: null, site: null, cadence: null };
+    APP.screenStack = ['home'];
+    toast('Added ' + wt.short);
+    openVisitOverview(visitId);
+  } catch (err) {
+    toast('Could not add work item: ' + err.message, true);
+  }
+}
+
+/* ============================================================
+   Site picker — reference-backed work types only
+============================================================ */
+async function goSitePicker() {
+  showScreen('sitePicker');
+  const lede = document.getElementById('sitePickerLede');
+  try {
+    if (!APP.sites) {
+      const data = await CTKStorage.loadSites();
+      APP.sites = data.sites || [];
+    }
+  } catch (err) {
+    lede.textContent = 'Could not load the site list. ' + err.message;
+    return;
+  }
+
+  // Adding to a visit that already has a site — only the cadence is needed.
+  const cadenceOnly = !!APP.addingToVisit;
+  document.getElementById('spHeading').textContent =
+    cadenceOnly ? 'Which visit?' : 'Which visit, and where?';
+  lede.textContent = cadenceOnly
+    ? 'Pick the cadence for this Bristol Water visit.'
+    : 'Pick the cadence, then the site. A longer visit includes the shorter work too.';
+
+  document.getElementById('siteSearchWrap').style.display = 'none';
+  document.getElementById('siteList').innerHTML = '';
+  document.getElementById('cadenceContinue').style.display = 'none';
+
+  renderCadenceSeg();
+}
+
+function renderCadenceSeg() {
+  const cs = CTKSchema.VISIT_CADENCES;
+  document.getElementById('cadenceSeg').innerHTML = Object.keys(cs).map((k) =>
+    '<button type="button" class="' + (APP.draft.cadence === k ? 'on' : '') + '" ' +
+      'onclick="selectCadence(\'' + k + '\')">' + escapeHtml(cs[k].label) + '</button>'
+  ).join('');
+  const c = CTKSchema.cadence(APP.draft.cadence);
+  document.getElementById('cadenceBlurb').textContent = c ? c.blurb : '';
+}
+
+function selectCadence(key) {
+  APP.draft.cadence = key;
+  renderCadenceSeg();
+
+  if (APP.addingToVisit) {
+    document.getElementById('cadenceContinue').style.display = '';
+    return;
+  }
+
+  const eligible = CTKSchema.eligibleSites(APP.sites, key);
+  document.getElementById('siteSearchWrap').style.display = eligible.length ? '' : 'none';
+  document.getElementById('sitePickerLede').textContent =
+    eligible.length + ' of ' + APP.sites.length + ' sites are due a ' +
+    CTKSchema.cadence(key).label.toLowerCase() + ' visit.';
+  renderSitePicker(eligible);
+}
+
+async function confirmCadenceOnly() {
+  await appendWorkItem(APP.draft.type, APP.draft.cadence);
+}
+
+function renderSitePicker(sites) {
+  if (!sites.length) {
+    document.getElementById('siteList').innerHTML =
+      '<div class="empty">No sites are due this visit type.</div>';
+    return;
+  }
+  document.getElementById('siteList').innerHTML = sites.map((s) => {
+    const search = (s.name + ' ' + (s.postcode || '')).toLowerCase();
+    return '<div class="card" data-search="' + escapeHtml(search) + '" ' +
+      'onclick="selectSite(' + JSON.stringify(s.name).replace(/"/g, '&quot;') + ')">' +
+      '<p class="card-title">' + escapeHtml(s.name) + '</p>' +
+      '<p class="card-sub">' + escapeHtml(s.postcode || '') +
+        (s.visit_frequency ? ' \u00b7 ' + escapeHtml(s.visit_frequency.replace(/_/g, '-')) : '') + '</p>' +
+    '</div>';
+  }).join('');
+}
+
+function filterSites() {
+  const q = document.getElementById('siteSearch').value.trim().toLowerCase();
+  document.querySelectorAll('#siteList .card').forEach((row) => {
+    row.style.display = (!q || row.dataset.search.includes(q)) ? '' : 'none';
+  });
+}
+
+async function selectSite(name) {
+  APP.draft.site = APP.sites.find((s) => s.name === name) || { name: name };
+  await goSetup();
+}
+
+/* ============================================================
+   Setup screen — shape depends on the work type
+============================================================ */
+async function goSetup() {
+  const wt = CTKSchema.workType(APP.draft.type);
+  const isRef = wt.site_source === 'reference';
+
+  document.getElementById('setupHeading').textContent =
+    isRef ? 'Confirm visit details' : wt.label;
+  document.getElementById('setupLede').textContent =
+    isRef ? 'Last step before you start.'
+          : 'Enter the job details. These appear on the report.';
+
+  // Client: locked for BW, typed for everything else
+  document.getElementById('setupClientField').style.display = wt.client_locked ? 'none' : '';
+  document.getElementById('setupClientLocked').style.display = wt.client_locked ? '' : 'none';
+  if (wt.client_locked) {
+    document.getElementById('lockedClient').textContent = wt.client_locked;
+  }
+
+  // Site: locked once picked from the reference list, typed otherwise
+  document.getElementById('setupSiteField').style.display = isRef ? 'none' : '';
+  document.getElementById('setupSiteLocked').style.display = isRef ? '' : 'none';
+  if (isRef && APP.draft.site) {
+    document.getElementById('lockedSite').textContent = APP.draft.site.name;
+  }
+
+  // Address only makes sense for typed jobs
+  document.getElementById('setupAddressField').style.display = isRef ? 'none' : '';
+
+  // Default date to today
+  const d = document.getElementById('fDate');
+  if (APP.carry) {
+    // Carried from the previous site — but bump to today if midnight passed
+    const today = new Date().toISOString().slice(0, 10);
+    d.value = today >= APP.carry.date ? today : APP.carry.date;
+    document.getElementById('fTech').value = APP.carry.technician;
+    APP.carry = null;
+  } else if (!d.value) {
+    d.value = new Date().toISOString().slice(0, 10);
+  }
+
+  await refreshSuggestions();
+  showScreen('setup');
+}
+
+/**
+ * Populate the datalists from values typed on this device before.
+ * This is what stops "Dishoom", "dishoom" and "Dishoom Ltd" becoming
+ * three different clients across three reports.
+ */
+async function refreshSuggestions() {
+  try {
+    const clients = await CTKStorage.getSuggestions('client', '');
+    document.getElementById('dlClient').innerHTML =
+      clients.map((c) => '<option value="' + escapeHtml(c) + '">').join('');
+
+    const sites = await CTKStorage.getSuggestions('site', '');
+    document.getElementById('dlSite').innerHTML =
+      sites.map((s) => '<option value="' + escapeHtml(s) + '">').join('');
+
+    document.getElementById('clientHint').innerHTML = clients.length
+      ? 'Start typing — previous clients will be suggested.'
+      : 'First job on this device, so there\'s nothing to suggest yet.';
+  } catch (err) { /* suggestions are a convenience, never fatal */ }
+}
+
+async function startVisit() {
+  const wt = CTKSchema.workType(APP.draft.type);
+  const isRef = wt.site_source === 'reference';
+
+  const client = wt.client_locked || document.getElementById('fClient').value.trim();
+  const site = isRef ? (APP.draft.site && APP.draft.site.name)
+                     : document.getElementById('fSite').value.trim();
+  const address = isRef ? '' : document.getElementById('fAddress').value.trim();
+  const date = document.getElementById('fDate').value;
+  const technician = document.getElementById('fTech').value;
+
+  if (!client) { toast('Please enter a client', true); return; }
+  if (!site) { toast('Please enter a site', true); return; }
+  if (!date) { toast('Please pick a date', true); return; }
+  if (!technician) { toast('Please pick a technician', true); return; }
+
+  // Flag a client we've not seen on this device, so the office knows to
+  // check it rather than silently accepting a possible typo.
+  let clientIsNew = false;
+  if (!wt.client_locked) {
+    const known = await CTKStorage.getSuggestions('client', '');
+    clientIsNew = !known.some((c) => c.toLowerCase() === client.toLowerCase());
+  }
+
+  try {
+    const visit = CTKSchema.createVisit({
+      client, site, address, date, technician,
+      site_ref: isRef ? APP.draft.site.name : null,
+      client_is_new: clientIsNew,
+      app_version: APP_BUILD,
+    });
+    const wiData = wt.cadence_required
+      ? Object.assign(CTKSchema.emptyDataFor(APP.draft.type), { visit_type: APP.draft.cadence })
+      : undefined;
+    visit.work_items.push(CTKSchema.createWorkItem(APP.draft.type, wiData));
+    await CTKStorage.saveVisit(visit);
+
+    // Remember what was typed, for next time
+    if (!wt.client_locked) {
+      await CTKStorage.rememberValue('client', client);
+      await CTKStorage.rememberValue('site', site);
+    }
+
+    APP.draft = { type: null, site: null, cadence: null };
+    APP.screenStack = ['home'];
+    openVisitOverview(visit.visit_id);
+  } catch (err) {
+    toast('Could not start job: ' + err.message, true);
+  }
+}
+
+/* ============================================================
+   Visit screen
+============================================================ */
+async function openVisitOverview(visitId) {
+  const v = await CTKStorage.getVisit(visitId);
+  if (!v) { toast('Visit not found', true); return; }
+  APP.currentVisitId = visitId;
+  APP.currentVisitSiteRef = v.site_ref || null;
+
+  document.getElementById('headerSubtitle').textContent = v.site;
+
+  const newFlag = v.meta && v.meta.client_is_new
+    ? '<span class="newflag">New client</span>' : '';
+
+  document.getElementById('visitHeader').innerHTML =
+    '<h2 style="margin-bottom:2px">' + escapeHtml(v.site) + newFlag + '</h2>' +
+    '<p class="lede">' + escapeHtml(v.client) + ' · ' + escapeHtml(v.date) +
+      ' · ' + escapeHtml(v.technician) + '</p>';
+
+  renderWorkItems(v);
+  showScreen('visitOverview');
+}
+
+function wiStatus(wi) {
+  if (wi.status === 'complete') return 'Complete';
+  const d = wi.data || {};
+  if (wi.type === 'installation') {
+    const t = installTotals(d);
+    return t.total ? (t.done + ' of ' + t.total + ' installed') : 'No devices yet';
+  }
+  const done = (d.task_results || []).filter((r) => r.status && r.status !== 'Pending').length;
+  const devices = (d.device_records || []).length;
+  const bits = [];
+  if (done) bits.push(done + ' task' + (done === 1 ? '' : 's') + ' recorded');
+  if (devices) bits.push(devices + ' device' + (devices === 1 ? '' : 's'));
+  return bits.length ? bits.join(' \u00b7 ') : 'Not started';
+}
+
+function renderWorkItems(v) {
+  const list = document.getElementById('workItemList');
+  if (!v.work_items.length) {
+    list.innerHTML = '<div class="empty">No work items yet.</div>';
+    return;
+  }
+  list.innerHTML = v.work_items.map((wi) => {
+    const wt = CTKSchema.workType(wi.type);
+    const cad = wi.data && wi.data.visit_type ? CTKSchema.cadence(wi.data.visit_type) : null;
+    const label = (wt ? wt.label : wi.type) + (cad ? ' \u2014 ' + cad.label : '');
+    return '<div class="wi-row">' +
+      '<div class="wi-main" onclick="openWorkItem(\'' + APP.currentVisitId +
+          '\',\'' + wi.work_item_id + '\')" style="cursor:pointer">' +
+        '<div class="wi-title">' + escapeHtml(label) + '</div>' +
+        '<div class="wi-sub">' + escapeHtml(wiStatus(wi)) + '</div>' +
+      '</div>' +
+      '<button class="wi-del" title="Remove" ' +
+        'onclick="removeWorkItem(\'' + wi.work_item_id + '\')">✕</button>' +
+    '</div>';
+  }).join('');
+}
+
+async function removeWorkItem(workItemId) {
+  const v = await CTKStorage.getVisit(APP.currentVisitId);
+  if (!v) return;
+  const wi = v.work_items.find((x) => x.work_item_id === workItemId);
+  const wt = wi ? CTKSchema.workType(wi.type) : null;
+  const label = wt ? wt.label : 'this work item';
+  if (!confirm('Remove ' + label + '? Any photos taken for it will be deleted too.')) return;
+  try {
+    await CTKStorage.deleteWorkItem(APP.currentVisitId, workItemId);
+    toast('Removed');
+    openVisitOverview(APP.currentVisitId);
+  } catch (err) {
+    toast('Could not remove: ' + err.message, true);
+  }
+}
+
+
+/* ============================================================
+   Bristol Water task list — compatibility shim
+   ------------------------------------------------------------
+   Everything below this block is ported VERBATIM from the
+   Bristol Water app (one line excepted, marked in place). It
+   expects a `visit` object with task_results, device_records and
+   friends at the top level, plus a global `BWStorage`.
+
+   In the unified app that state lives inside a work item. Rather
+   than edit 1,400 lines of working, field-tested code, this shim
+   presents the old shape. Behaviour is therefore identical to
+   what Tom and Ben use today.
+============================================================ */
+
+// Fields that live on the work item's data block, not the visit
+const BW_FIELDS = ['visit_type', 'task_results', 'new_assets',
+                   'pending_remedials', 'remedial_changes', 'device_records'];
+
+/**
+ * Present a (visit, workItem) pair as the flat object the ported code
+ * expects. Reads and writes pass straight through, so mutations by the
+ * ported code land on the work item.
+ */
+function bwView(visit, item) {
+  const view = {
+    _visit: visit,
+    _item: item,
+    visit_id: visit.visit_id,
+    site: visit.site_ref || visit.site,
+    date: visit.date,
+    technician: visit.technician,
+    created_at: visit.created_at,
+  };
+  for (const f of BW_FIELDS) {
+    Object.defineProperty(view, f, {
+      enumerable: true,
+      get: () => item.data[f],
+      set: (val) => { item.data[f] = val; },
+    });
+  }
+  // The ported code sets these on completion; route them to the work item
+  for (const f of ['status', 'completed_at']) {
+    Object.defineProperty(view, f, {
+      enumerable: true,
+      get: () => item[f],
+      set: (val) => { item[f] = val; },
+    });
+  }
+  return view;
+}
+
+const BWStorage = {
+  async getVisit(visitId) {
+    const v = await CTKStorage.getVisit(visitId);
+    if (!v) return null;
+    const item = (v.work_items || []).find(
+      (w) => w.work_item_id === APP.currentWorkItemId);
+    if (!item) return null;
+    return bwView(v, item);
+  },
+  async saveVisit(view) {
+    view._item.updated_at = new Date().toISOString();
+    await CTKStorage.saveVisit(view._visit);
+    return view;
+  },
+  // Photos now belong to a work item as well as a visit
+  addPhoto:     (visitId, blob) => CTKStorage.addPhoto(visitId, APP.currentWorkItemId, blob),
+  getPhoto:     (id) => CTKStorage.getPhoto(id),
+  _deletePhoto: (id) => CTKStorage.deletePhoto(id),
+  deleteVisit:  (id) => CTKStorage.deleteVisit(id),
+  loadSites:    () => CTKStorage.loadSites(),
+  loadRemedials:() => CTKStorage.loadRemedials(),
+  loadDevices:  () => CTKStorage.loadDevices(),
+};
+
+/**
+ * The ported code logs diagnostics via dbg(). The BW app showed these in an
+ * on-screen panel added to chase a photo bug. Keeping the call sites but
+ * routing them to a small in-memory ring buffer — readable from a phone's
+ * console as CTK_LOG — so the panel can be restored later if needed.
+ */
+const CTK_LOG = [];
+window.CTK_LOG = CTK_LOG;
+function dbg(level, message, detail) {
+  CTK_LOG.push({ t: new Date().toISOString(), level, message, detail });
+  if (CTK_LOG.length > 300) CTK_LOG.shift();
+  if (level === 'error') console.error('[ctk]', message, detail);
+}
+
+function visitTypeLabel(t) {
+  const c = CTKSchema.cadence(t);
+  return c ? c.label : t;
+}
+
+const FREQUENCY_ORDER = ['quarterly', 'six_monthly', 'annual', 'ongoing'];
+const FREQUENCY_LABELS = {
+  quarterly:   'Quarterly tasks',
+  six_monthly: 'Six-monthly tasks',
+  annual:      'Annual tasks',
+  ongoing:     'Ongoing controls',
+};
+
+// Tasks visible for a given visit type (absorption rule).
+const TASK_FREQUENCIES_FOR = {
+  quarterly:   new Set(['quarterly', 'ongoing']),
+  six_monthly: new Set(['quarterly', 'six_monthly', 'ongoing']),
+  annual:      new Set(['quarterly', 'six_monthly', 'annual', 'ongoing']),
+};
+
+/**
+ * Find the assets at a site that match a task's filter.
+ *
+/**
+ * Build the visit's work-item list from the outlet-first data model.
+ *
+ * Returns an object:
+ *   {
+ *     outlets: [{ outlet: {asset, can, type, subtasks}, visible_subtasks, added_during_visit }],
+ *     site_level_items: [{ id, label, frequency }],
+ *   }
+ *
+ * `visible_subtasks` is the filtered list of subtasks matching the visit
+ * type's absorption rule — technicians only see what applies today.
+ * An outlet with zero visible subtasks is dropped.
+ *
+ * Outlets added during the visit (via "+ Add outlet") come from
+ * visit.new_assets[] and get merged in with an `added_during_visit` flag.
+ */
+function buildTaskList(visit) {
+  const site = APP.sites.find((s) => s.name === visit.site);
+  if (!site) return { outlets: [], site_level_items: [] };
+
+  const wantedFreqs = TASK_FREQUENCIES_FOR[visit.visit_type];
+  if (!wantedFreqs) return { outlets: [], site_level_items: [] };
+
+  const outletsSource = site.outlets || [];
+  const siteLevelSource = site.site_level_items || [];
+
+  const outlets = [];
+  for (const outlet of outletsSource) {
+    const visible = (outlet.subtasks || []).filter((st) => wantedFreqs.has(st.frequency));
+    if (visible.length === 0) continue;
+    outlets.push({ outlet, visible_subtasks: visible, added_during_visit: false });
+  }
+
+  // Merge in outlets added during this visit
+  for (const added of (visit.new_assets || [])) {
+    if (!added.subtasks) continue; // legacy new_assets from old model — skip
+    const visible = added.subtasks.filter((st) => wantedFreqs.has(st.frequency));
+    if (visible.length === 0) continue;
+    outlets.push({
+      outlet: { asset: added.asset, can: added.can, type: added.type, subtasks: added.subtasks },
+      visible_subtasks: visible,
+      added_during_visit: true,
+    });
+  }
+
+  const site_level_items = siteLevelSource.filter((it) => wantedFreqs.has(it.frequency));
+
+  return { outlets, site_level_items };
+}
+
+/**
+ * Look up a task_result entry on the visit by composite key.
+ * Returns the entry or null.
+ */
+function findResult(visit, taskId, assetName) {
+  return (visit.task_results || []).find(
+    (r) => r.task_id === taskId && (r.asset || null) === (assetName || null)
+  ) || null;
+}
+
+/**
+ * Update or insert a task_result entry on the visit. Mutates the visit
+ * object and persists. Returns the updated entry.
+ */
+async function updateResult(taskId, assetName, can, patch) {
+  const v = await BWStorage.getVisit(APP.currentVisitId);
+  if (!v) { toast('Visit not found', true); return null; }
+  if (!v.task_results) v.task_results = [];
+
+  let entry = v.task_results.find(
+    (r) => r.task_id === taskId && (r.asset || null) === (assetName || null)
+  );
+  if (!entry) {
+    entry = {
+      task_id:           taskId,
+      asset:             assetName || null,
+      customer_asset_no: can || null,
+      status:            'Pending',
+      status_reason:     null,
+      condition:         null,
+      notes:             '',
+      photo_ids:         [],
+      completed_at:      null,
+    };
+    v.task_results.push(entry);
+  }
+  Object.assign(entry, patch);
+  if (patch.status === 'Done') entry.completed_at = new Date().toISOString();
+  await BWStorage.saveVisit(v);
+  APP.currentVisit = v;
+  return entry;
+}
+
+/* ============================================================
+   Open visit — main entry point that renders the task list
+============================================================ */
+async function openVisit(visitId) {
+  const v = await BWStorage.getVisit(visitId);
+  if (!v) { toast('Visit not found', true); goHome(); return; }
+
+  APP.currentVisitId = visitId;
+  APP.currentVisit = v;
+  APP.expandedAssetRows = new Set();   // composite keys of expanded rows
+  APP.addingOutlet = false;            // true when the "Add outlet" form is showing
+
+  document.getElementById('visitHeading').textContent = v.site;
+  document.getElementById('visitLede').textContent =
+    `${visitTypeLabel(v.visit_type)} • ${v.date} • ${v.technician}`;
+  document.getElementById('headerSubtitle').textContent = v.site;
+
+  APP.screenStack = ['home', 'visit'];
+  showScreen('visit', false);
+
+  await renderTaskList();
+}
+
+async function renderTaskList() {
+  const v = APP.currentVisit;
+  const workList = buildTaskList(v);
+
+  renderRemedialsBanner(v);
+
+  const root = document.getElementById('taskList');
+  const hasWork = workList.outlets.length > 0 || workList.site_level_items.length > 0;
+
+  if (!hasWork) {
+    root.innerHTML = '<div class="empty">No tasks defined for this visit type at this site.</div>' + renderDeviceSection(v);
+    wireDeviceHandlers();
+    updateProgress();
+    return;
+  }
+
+  let html = '';
+
+  // OUTLETS section — always show the header so the "+ Add outlet"
+  // button is available even at sites where the register is empty
+  html += `<div class="worklist-section-head">Outlets</div>`;
+  if (workList.outlets.length > 0) {
+    for (const item of workList.outlets) {
+      html += renderOutletCard(item.outlet, item.visible_subtasks, v, item.added_during_visit);
+    }
+  } else {
+    html += `<div class="empty">No outlets in the register for this visit type. Use "+ Add outlet" if there's one on site.</div>`;
+  }
+
+  // "+ Add outlet" button (or the form if the technician is adding one)
+  if (APP.addingOutlet) {
+    html += renderAddOutletForm();
+  } else {
+    html += `<button class="add-asset-btn" data-action="add-outlet">+ Add outlet</button>`;
+  }
+
+  // SITE-LEVEL section header (only if there are any)
+  if (workList.site_level_items.length > 0) {
+    html += `<div class="worklist-section-head">Site-level tasks</div>`;
+    for (const item of workList.site_level_items) {
+      html += renderSiteLevelCard(item, v);
+    }
+  }
+
+  // Device Maintenance always at the bottom (optional/add-only)
+  html += renderDeviceSection(v);
+
+  root.innerHTML = html;
+
+  wireTaskListHandlers();
+  wireDeviceHandlers();
+  updateProgress();
+}
+
+function renderRemedialsBanner(v) {
+  const banner = document.getElementById('remedialsBanner');
+  const open = (APP.remedials.items || []).filter(
+    (r) => r.site === v.site && r.status === 'open'
+  );
+  if (open.length === 0) {
+    banner.innerHTML = '';
+    return;
+  }
+
+  const changes = v.remedial_changes || [];
+  const findChange = (id) => changes.find((c) => c.remedial_id === id);
+
+  let html = `<div class="remedials-banner">`;
+  html += `<div class="rb-title">${open.length} open remedial${open.length === 1 ? '' : 's'} from previous visits</div>`;
+
+  for (const rem of open) {
+    const change = findChange(rem.id);
+    const state = change ? change.new_status : null;
+    html += `<div class="rem-item">`;
+    html += `<div class="rem-asset">${escapeHtml(rem.asset)}</div>`;
+    html += `<div class="rem-note">${escapeHtml(rem.note)}</div>`;
+    html += `<div class="rem-actions">`;
+    html += `<button data-action="rem-status" data-rem-id="${escapeHtml(rem.id)}" data-status="open" class="${state === 'open' ? 'active open' : ''}">Still open</button>`;
+    html += `<button data-action="rem-status" data-rem-id="${escapeHtml(rem.id)}" data-status="updated" class="${state === 'updated' ? 'active updated' : ''}">Updated</button>`;
+    html += `<button data-action="rem-status" data-rem-id="${escapeHtml(rem.id)}" data-status="resolved" class="${state === 'resolved' ? 'active resolved' : ''}">Resolved</button>`;
+    html += `</div>`;
+    if (state === 'updated') {
+      html += `<textarea class="rem-update-note" data-action="rem-note" data-rem-id="${escapeHtml(rem.id)}" placeholder="Describe the update — what changed">${escapeHtml(change.note || '')}</textarea>`;
+    }
+    html += `</div>`;
+  }
+  html += `</div>`;
+
+  banner.innerHTML = html;
+  wireRemedialsHandlers();
+}
+
+function wireRemedialsHandlers() {
+  const banner = document.getElementById('remedialsBanner');
+  banner.onclick = async (e) => {
+    if (e.target.dataset.action !== 'rem-status') return;
+    const { remId, status } = e.target.dataset;
+    const v = await BWStorage.getVisit(APP.currentVisitId);
+    if (!v.remedial_changes) v.remedial_changes = [];
+    let change = v.remedial_changes.find((c) => c.remedial_id === remId);
+    if (!change) {
+      change = { remedial_id: remId, new_status: null, note: '', changed_at: null };
+      v.remedial_changes.push(change);
+    }
+    change.new_status = status;
+    change.changed_at = new Date().toISOString();
+    if (status !== 'updated') change.note = '';
+    await BWStorage.saveVisit(v);
+    APP.currentVisit = v;
+    renderRemedialsBanner(v);
+  };
+  banner.oninput = async (e) => {
+    if (e.target.dataset.action !== 'rem-note') return;
+    const remId = e.target.dataset.remId;
+    clearTimeout(APP._remNoteTimer);
+    APP._remNoteTimer = setTimeout(async () => {
+      const v = await BWStorage.getVisit(APP.currentVisitId);
+      const change = (v.remedial_changes || []).find((c) => c.remedial_id === remId);
+      if (change) {
+        change.note = e.target.value;
+        await BWStorage.saveVisit(v);
+        APP.currentVisit = v;
+      }
+    }, 250);
+  };
+}
+
+/* ============================================================
+   Device Maintenance section
+
+   Sits at the bottom of the task list. Optional per visit — most visits
+   won't have any device work. Add-only: no "known devices at this site"
+   list is surfaced (per Sam's request), but the register in
+   bw_devices.json still grows silently from field entries so we have a
+   history for future reference.
+============================================================ */
+
+const DEVICE_WORK_TYPES = [
+  { id: 'installed',   label: 'Device installed' },
+  { id: 'battery',     label: 'Battery change' },
+  { id: 'swap',        label: 'Device swap' },
+  { id: 'signal',      label: 'Signal issue' },
+  { id: 'calibration', label: 'Calibration' },
+];
+
+function renderDeviceSection(v) {
+  const records = v.device_records || [];
+  const editingId = (APP.deviceEditId || null);
+
+  let html = `<div class="device-section">`;
+  html += `<div class="ds-head">`;
+  html += `<span class="ds-title">Device maintenance</span>`;
+  html += `<span class="ds-count">${records.length} device${records.length === 1 ? '' : 's'} logged</span>`;
+  html += `</div>`;
+
+  if (editingId === 'new') {
+    // Pass the live draft so typed-in fields and just-added photos survive re-render
+    html += renderDeviceForm(null, APP.deviceDraft);
+  }
+
+  if (records.length === 0 && editingId !== 'new') {
+    html += `<div class="ds-empty">`;
+    html += `No devices recorded yet — tap below to add one`;
+    html += `</div>`;
+  } else {
+    for (const dr of records) {
+      if (editingId === dr.device_id) {
+        html += renderDeviceForm(dr, APP.deviceDraft);
+      } else {
+        html += renderDeviceCard(dr);
+      }
+    }
+  }
+
+  if (editingId !== 'new') {
+    html += `<button class="btn btn-secondary btn-block" data-device-action="add">+ Add device</button>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+function renderDeviceCard(dr) {
+  const works = (dr.works_done || []).map((wid) => {
+    const found = DEVICE_WORK_TYPES.find((w) => w.id === wid);
+    return found ? found.label : wid;
+  });
+  const photoCount = (dr.photo_ids || []).length;
+
+  let html = `<div class="device-card">`;
+  html += `<div class="dc-head">`;
+  html += `<span class="dc-code">${escapeHtml(dr.code || '(no code)')}</span>`;
+  html += `<span class="dc-location">${escapeHtml(dr.location || '')}</span>`;
+  html += `</div>`;
+  if (works.length > 0) {
+    html += `<div class="dc-works">`;
+    for (const w of works) {
+      html += `<span class="dc-work-chip">${escapeHtml(w)}</span>`;
+    }
+    html += `</div>`;
+  }
+  if (dr.notes) {
+    html += `<div class="dc-notes">"${escapeHtml(dr.notes)}"</div>`;
+  }
+  if (photoCount > 0) {
+    html += `<div class="dc-notes" style="font-style: normal;">${photoCount} photo${photoCount === 1 ? '' : 's'} attached</div>`;
+  }
+  html += `<div class="dc-actions">`;
+  html += `<button class="btn btn-secondary" data-device-action="edit" data-device-id="${escapeHtml(dr.device_id)}">Edit</button>`;
+  html += `<button class="btn btn-secondary" data-device-action="delete" data-device-id="${escapeHtml(dr.device_id)}" style="color: var(--red);">Delete</button>`;
+  html += `</div>`;
+  html += `</div>`;
+  return html;
+}
+
+/**
+ * Render the device add/edit form. If a `draft` is passed, its values
+ * override the base record — this lets us preserve mid-edit state across
+ * re-renders (e.g. when the user takes a photo mid-way through filling
+ * in the form, the re-render doesn't wipe what they typed).
+ */
+function renderDeviceForm(dr, draft) {
+  const isNew = !dr;
+  const base = dr || { device_id: 'new', code: '', location: '', works_done: [], notes: '', photo_ids: [] };
+  // Merge: draft values (if any) win over the base record
+  const rec = {
+    device_id:  base.device_id,
+    code:       (draft && 'code' in draft && draft.code !== undefined) ? draft.code : base.code,
+    location:   (draft && 'location' in draft && draft.location !== undefined) ? draft.location : base.location,
+    works_done: (draft && Array.isArray(draft.works_done)) ? draft.works_done : (base.works_done || []),
+    notes:      (draft && 'notes' in draft && draft.notes !== undefined) ? draft.notes : base.notes,
+    photo_ids:  (draft && Array.isArray(draft.photo_ids)) ? draft.photo_ids : (base.photo_ids || []),
+  };
+  const worksSet = new Set(rec.works_done || []);
+
+  let html = `<div class="device-form">`;
+  html += `<h4>${isNew ? 'Add device' : 'Edit device'}</h4>`;
+
+  html += `<label>Device code</label>`;
+  html += `<input type="text" data-device-field="code" data-device-id="${escapeHtml(rec.device_id)}" value="${escapeHtml(rec.code || '')}" placeholder="e.g. BW-MON-001">`;
+
+  html += `<label>Location at site</label>`;
+  html += `<input type="text" data-device-field="location" data-device-id="${escapeHtml(rec.device_id)}" value="${escapeHtml(rec.location || '')}" placeholder="e.g. Main Hall — east wall">`;
+
+  html += `<label>Works completed this visit</label>`;
+  html += `<div class="works-checkboxes">`;
+  for (const w of DEVICE_WORK_TYPES) {
+    const checked = worksSet.has(w.id) ? 'checked' : '';
+    html += `<label>`;
+    html += `<input type="checkbox" data-device-work="${escapeHtml(w.id)}" data-device-id="${escapeHtml(rec.device_id)}" ${checked}>`;
+    html += `${escapeHtml(w.label)}`;
+    html += `</label>`;
+  }
+  html += `</div>`;
+
+  html += `<label>Notes (any additional works, issues, or observations)</label>`;
+  html += `<textarea data-device-field="notes" data-device-id="${escapeHtml(rec.device_id)}" placeholder="Free text — describe anything else you noticed or did">${escapeHtml(rec.notes || '')}</textarea>`;
+
+  // Photos — show thumbnails for anything already attached to the draft/record
+  html += `<label>Photos</label>`;
+  html += `<div class="df-photos" data-device-photos-for="${escapeHtml(rec.device_id)}">`;
+  html += renderDevicePhotoStrip(rec);
+  html += `</div>`;
+  html += `<input type="file" accept="image/*" capture="environment" style="display:none" data-device-photo-input="${escapeHtml(rec.device_id)}">`;
+  html += `<button class="btn btn-secondary" data-device-action="add-photo" data-device-id="${escapeHtml(rec.device_id)}" style="margin-top:6px;" type="button">+ Add photo</button>`;
+
+  html += `<div class="form-actions">`;
+  html += `<button class="btn btn-secondary" data-device-action="cancel" type="button">Cancel</button>`;
+  html += `<button class="btn btn-primary" data-device-action="save" data-device-id="${escapeHtml(rec.device_id)}" type="button">Save</button>`;
+  html += `</div>`;
+
+  html += `</div>`;
+  return html;
+}
+
+function renderDevicePhotoStrip(dr) {
+  const ids = dr.photo_ids || [];
+  if (ids.length === 0) return '<div style="font-size:12px;color:var(--muted);">No photos yet.</div>';
+
+  // Render thumbnails using the same img[data-photo-id] pattern as task
+  // photos — hydratePhotos() will attach object URLs after re-render.
+  let html = `<div class="photo-strip">`;
+  for (const pid of ids) {
+    html += `<div class="photo-thumb" data-photo-id="${escapeHtml(pid)}">`;
+    html += `<img alt="" data-photo-id="${escapeHtml(pid)}">`;
+    html += `<button class="photo-del" data-device-action="del-photo" data-device-id="${escapeHtml(dr.device_id)}" data-photo-id="${escapeHtml(pid)}" type="button">×</button>`;
+    html += `</div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+/**
+ * Wire up event delegation for all device-related buttons and inputs.
+ * Uses data-attributes so we don't need to worry about inline onclick
+ * escaping. Guarded so re-renders don't stack multiple listeners.
+ */
+function wireDeviceHandlers() {
+  const root = document.getElementById('taskList');
+  if (!root || root._deviceWired) return;
+  root._deviceWired = true;
+
+  root.addEventListener('click', deviceClickHandler);
+  root.addEventListener('change', deviceChangeHandler);
+  root.addEventListener('input', deviceInputHandler);
+}
+
+// Named handlers so we can remove them on re-render (avoid double-wiring)
+async function deviceClickHandler(e) {
+  const action = e.target.dataset.deviceAction;
+  if (!action) return;
+  e.preventDefault();
+
+  const deviceId = e.target.dataset.deviceId;
+
+  if (action === 'add') {
+    APP.deviceEditId = 'new';
+    APP.deviceDraft = { code: '', location: '', works_done: [], notes: '', photo_ids: [] };
+    await renderTaskList();
+    return;
+  }
+  if (action === 'cancel') {
+    APP.deviceEditId = null;
+    APP.deviceDraft = null;
+    await renderTaskList();
+    return;
+  }
+  if (action === 'edit') {
+    APP.deviceEditId = deviceId;
+    const v = await BWStorage.getVisit(APP.currentVisitId);
+    const existing = (v.device_records || []).find((d) => d.device_id === deviceId);
+    APP.deviceDraft = existing ? { ...existing } : null;
+    await renderTaskList();
+    return;
+  }
+  if (action === 'delete') {
+    if (!confirm('Delete this device record? Photos will be removed too.')) return;
+    const v = await BWStorage.getVisit(APP.currentVisitId);
+    const dr = (v.device_records || []).find((d) => d.device_id === deviceId);
+    if (dr) {
+      // Cascade-delete photos
+      for (const pid of (dr.photo_ids || [])) {
+        try { await BWStorage._deletePhoto?.(pid); } catch (_) { /* ignore */ }
+      }
+      v.device_records = v.device_records.filter((d) => d.device_id !== deviceId);
+      await BWStorage.saveVisit(v);
+      APP.currentVisit = v;
+    }
+    await renderTaskList();
+    return;
+  }
+  if (action === 'save') {
+    await saveDeviceDraft();
+    return;
+  }
+  if (action === 'add-photo') {
+    const fileInput = document.querySelector(`[data-device-photo-input="${deviceId}"]`);
+    if (fileInput) fileInput.click();
+    return;
+  }
+  if (action === 'del-photo') {
+    // Remove a photo from the current draft. Doesn't cascade-delete the
+    // blob — that only happens if the user saves without this photo, or
+    // cancels the whole form. Simpler UX: no extra confirmation for a
+    // photo you just took.
+    const photoId = e.target.dataset.photoId;
+    if (!photoId) return;
+    if (!APP.deviceDraft) APP.deviceDraft = { photo_ids: [] };
+    APP.deviceDraft.photo_ids = (APP.deviceDraft.photo_ids || []).filter((p) => p !== photoId);
+    await renderTaskList();
+    return;
+  }
+}
+
+async function deviceChangeHandler(e) {
+  const fileInputId = e.target.dataset.devicePhotoInput;
+  if (fileInputId && e.target.files && e.target.files[0]) {
+    dbg('step', 'device add-photo: change event fired');
+    try {
+      const file = e.target.files[0];
+      dbg('step', 'device add-photo: file received', {
+        name: file.name, size: file.size, type: file.type,
+      });
+      if (!APP.currentVisitId) {
+        dbg('error', 'device add-photo: no APP.currentVisitId');
+        return;
+      }
+      dbg('step', 'device add-photo: compressing');
+      const compressed = await compressPhoto(file);
+      const photoId = await BWStorage.addPhoto(APP.currentVisitId, compressed);
+      dbg('ok', 'device add-photo: saved to storage', { photoId, size: compressed.size });
+      if (!APP.deviceDraft) APP.deviceDraft = { photo_ids: [] };
+      APP.deviceDraft.photo_ids = APP.deviceDraft.photo_ids || [];
+      APP.deviceDraft.photo_ids.push(photoId);
+      dbg('step', 'device add-photo: pushed into draft', { count: APP.deviceDraft.photo_ids.length });
+      e.target.value = ''; // reset so same file can be picked again
+      await renderTaskList();
+      dbg('ok', 'device add-photo: renderTaskList completed');
+    } catch (err) {
+      dbg('error', 'device add-photo: threw', err);
+      toast('Photo failed: ' + err.message, true);
+    }
+    return;
+  }
+
+  const workId = e.target.dataset.deviceWork;
+  if (workId) {
+    if (!APP.deviceDraft) APP.deviceDraft = { works_done: [] };
+    APP.deviceDraft.works_done = APP.deviceDraft.works_done || [];
+    if (e.target.checked) {
+      if (!APP.deviceDraft.works_done.includes(workId)) {
+        APP.deviceDraft.works_done.push(workId);
+      }
+    } else {
+      APP.deviceDraft.works_done = APP.deviceDraft.works_done.filter((w) => w !== workId);
+    }
+    return;
+  }
+}
+
+function deviceInputHandler(e) {
+  const field = e.target.dataset.deviceField;
+  if (!field) return;
+  if (!APP.deviceDraft) APP.deviceDraft = {};
+  APP.deviceDraft[field] = e.target.value;
+}
+
+async function saveDeviceDraft() {
+  const v = await BWStorage.getVisit(APP.currentVisitId);
+  if (!v.device_records) v.device_records = [];
+
+  const draft = APP.deviceDraft || {};
+  if (!draft.code || !draft.code.trim()) {
+    toast('Please enter a device code', true);
+    return;
+  }
+
+  if (APP.deviceEditId === 'new') {
+    // Create new
+    const newRec = {
+      device_id:    'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8),
+      code:         draft.code.trim(),
+      location:     (draft.location || '').trim(),
+      works_done:   draft.works_done || [],
+      notes:        (draft.notes || '').trim(),
+      photo_ids:    draft.photo_ids || [],
+      created_at:   new Date().toISOString(),
+    };
+    v.device_records.push(newRec);
+  } else {
+    // Update existing
+    const idx = v.device_records.findIndex((d) => d.device_id === APP.deviceEditId);
+    if (idx >= 0) {
+      v.device_records[idx] = {
+        ...v.device_records[idx],
+        code:       draft.code.trim(),
+        location:   (draft.location || '').trim(),
+        works_done: draft.works_done || [],
+        notes:      (draft.notes || '').trim(),
+        photo_ids:  draft.photo_ids || [],
+        updated_at: new Date().toISOString(),
+      };
+    }
+  }
+
+  await BWStorage.saveVisit(v);
+  APP.currentVisit = v;
+  APP.deviceEditId = null;
+  APP.deviceDraft = null;
+  toast('Device saved.');
+  await renderTaskList();
+}
+
+/**
+ * Render one OUTLET card — an asset (eyebath, shower, combo, etc.) with
+ * its visible subtasks stacked inside. Each subtask row is tappable to
+ * expand into the status/condition/notes/photos form (existing pattern
+ * from the old task-based UI).
+ *
+ * `outlet` shape:
+ *   { asset, can, type, subtasks: [...] }
+ * `visibleSubtasks` is the pre-filtered list matching the current visit
+ * type's absorption rule.
+ */
+function renderOutletCard(outlet, visibleSubtasks, visit, addedDuringVisit) {
+  const openRems = (APP.remedials.items || []).filter(
+    (r) => r.site === visit.site && r.asset === outlet.asset && r.status === 'open'
+  );
+
+  let html = `<div class="task-block outlet-card" data-outlet="${escapeHtml(outlet.asset)}">`;
+  html += `<div class="task-block-head">`;
+  html += `<div>`;
+  html += `<div class="tb-label">${escapeHtml(outlet.asset)}${addedDuringVisit ? ' <span class="pill" style="font-size: 10px;">added</span>' : ''}</div>`;
+  const meta = [];
+  if (outlet.can) meta.push(escapeHtml(outlet.can));
+  meta.push(`${visibleSubtasks.length} subtask${visibleSubtasks.length === 1 ? '' : 's'}`);
+  html += `<div class="tb-meta">${meta.join(' • ')}</div>`;
+  html += `</div>`;
+  html += `</div>`;
+
+  for (const st of visibleSubtasks) {
+    html += renderSubtaskRow(st, outlet, visit, openRems);
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+/**
+ * Render one subtask row inside an outlet card. Behaves the same as the
+ * old renderAssetRow — tap to expand into the status/condition form.
+ *
+ * The composite key (subtaskId, outletName) is used everywhere the old
+ * (taskId, assetName) key used to be, so the storage layer needs no
+ * changes.
+ */
+function renderSubtaskRow(subtask, outlet, visit, openRems) {
+  const result = findResult(visit, subtask.id, outlet.asset);
+  const expanded = APP.expandedAssetRows.has(subtask.id + '||' + outlet.asset);
+
+  let html = `<div class="asset-row${expanded ? ' expanded' : ''}" data-task-id="${escapeHtml(subtask.id)}" data-asset="${escapeHtml(outlet.asset)}" data-can="${escapeHtml(outlet.can || '')}">`;
+  html += `<div class="asset-row-summary" data-action="toggle-row" data-task-id="${escapeHtml(subtask.id)}" data-asset="${escapeHtml(outlet.asset)}">`;
+  html += `<div class="ar-name">`;
+  html += `<div class="ar-name-text">${escapeHtml(subtask.label)}</div>`;
+  if (subtask.frequency && subtask.frequency !== 'quarterly') {
+    html += `<div class="ar-can">${escapeHtml(FREQUENCY_LABELS[subtask.frequency] || subtask.frequency)}</div>`;
+  }
+  html += `</div>`;
+  html += `<div class="ar-status">`;
+  if (result && result.photo_ids && result.photo_ids.length > 0) {
+    html += `<span class="photo-badge">📷 ${result.photo_ids.length}</span>`;
+  }
+  if (result && result.condition) {
+    html += `<span class="condition-pill ${result.condition}">${capitalize(result.condition)}</span>`;
+  }
+  html += renderStatusDot(result ? result.status : 'Pending');
+  html += `</div>`;
+  html += `</div>`;
+
+  if (expanded) {
+    // Pass a synthetic "task_def" (uses subtask.id/label) and "asset" (outlet)
+    // into the existing form renderer, which keeps a single source of truth
+    // for the row detail UI.
+    const td = { id: subtask.id, label: subtask.label };
+    const assetLike = { asset: outlet.asset, can: outlet.can, type: outlet.type };
+    html += renderAssetRowForm(td, assetLike, result, openRems);
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+/**
+ * Render a SITE-LEVEL item card. Structurally similar to an outlet card
+ * but with just one subtask row (the item itself). Same visible weight —
+ * you don't need to expand to see what the task is.
+ */
+function renderSiteLevelCard(item, visit) {
+  // Treat the item like a synthetic "outlet" with a single subtask that
+  // IS the item. Storage key: (item.id, null) — same as old count-based
+  // tasks used to work.
+  const result = findResult(visit, item.id, null);
+  const expanded = APP.expandedAssetRows.has(item.id + '||');
+
+  let html = `<div class="task-block site-level-card">`;
+  html += `<div class="task-block-head">`;
+  html += `<div>`;
+  html += `<div class="tb-label">${escapeHtml(item.label)}</div>`;
+  html += `<div class="tb-meta">${escapeHtml(FREQUENCY_LABELS[item.frequency] || item.frequency)}</div>`;
+  html += `</div>`;
+  html += `</div>`;
+
+  html += `<div class="asset-row${expanded ? ' expanded' : ''}" data-task-id="${escapeHtml(item.id)}" data-asset="">`;
+  html += `<div class="asset-row-summary" data-action="toggle-row" data-task-id="${escapeHtml(item.id)}" data-asset="">`;
+  html += `<div class="ar-name">`;
+  html += `<div class="ar-name-text">Tap to update</div>`;
+  html += `</div>`;
+  html += `<div class="ar-status">`;
+  if (result && result.photo_ids && result.photo_ids.length > 0) {
+    html += `<span class="photo-badge">📷 ${result.photo_ids.length}</span>`;
+  }
+  if (result && result.condition) {
+    html += `<span class="condition-pill ${result.condition}">${capitalize(result.condition)}</span>`;
+  }
+  html += renderStatusDot(result ? result.status : 'Pending');
+  html += `</div>`;
+  html += `</div>`;
+
+  if (expanded) {
+    const td = { id: item.id, label: item.label };
+    html += renderAssetRowForm(td, null, result, []);
+  }
+
+  html += `</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function renderAssetRowForm(td, asset, result, openRems) {
+  const status = result ? result.status : 'Pending';
+  const condition = result ? result.condition : null;
+  const notes = result ? result.notes : '';
+  const reason = result ? result.status_reason : '';
+
+  const photoIds = (result && result.photo_ids) || [];
+
+  let html = `<div class="asset-row-form">`;
+
+  // Open remedials displayed inline if attached to this asset
+  for (const rem of openRems) {
+    html += `<div class="remedial-note">`;
+    html += `<div class="rn-label">Previously identified</div>`;
+    html += `<div>${escapeHtml(rem.note)}</div>`;
+    html += `</div>`;
+  }
+
+  // Status segmented control
+  html += `<label>Status</label>`;
+  html += `<div class="seg">`;
+  for (const s of ['Done', 'Unable', 'NotNeeded', 'Pending']) {
+    const active = status === s ? 'active' : '';
+    const cls = s === 'Done' ? 'done' : s === 'Unable' ? 'unable' : s === 'NotNeeded' ? 'notneeded' : 'pending';
+    html += `<button data-action="set-status" data-status="${s}" data-task-id="${escapeHtml(td.id)}" data-asset="${escapeHtml((asset && asset.asset) || '')}" data-can="${escapeHtml((asset && asset.can) || '')}" class="${active} ${cls}">${s === 'NotNeeded' ? 'Not needed' : s}</button>`;
+  }
+  html += `</div>`;
+
+  // Status reason — only when Unable or NotNeeded
+  if (status === 'Unable' || status === 'NotNeeded') {
+    html += `<label>Reason</label>`;
+    html += `<textarea class="notes" data-action="set-reason" data-task-id="${escapeHtml(td.id)}" data-asset="${escapeHtml((asset && asset.asset) || '')}" placeholder="${status === 'Unable' ? 'e.g. no access, isolation valve seized' : 'e.g. completed last visit, asset removed'}">${escapeHtml(reason || '')}</textarea>`;
+  }
+
+  // Condition — only when Done
+  if (status === 'Done') {
+    html += `<label>Condition</label>`;
+    html += `<div class="seg cond">`;
+    for (const c of ['satisfactory', 'minor', 'attention', 'urgent']) {
+      const active = condition === c ? 'active' : '';
+      html += `<button data-action="set-condition" data-condition="${c}" data-task-id="${escapeHtml(td.id)}" data-asset="${escapeHtml((asset && asset.asset) || '')}" class="${active} ${c}">${capitalize(c)}</button>`;
+    }
+    html += `</div>`;
+  }
+
+  // Notes
+  html += `<label>Notes</label>`;
+  html += `<textarea class="notes" data-action="set-notes" data-task-id="${escapeHtml(td.id)}" data-asset="${escapeHtml((asset && asset.asset) || '')}" placeholder="Optional notes for the report">${escapeHtml(notes || '')}</textarea>`;
+
+  // Photos
+  html += `<label>Photos</label>`;
+  html += `<div class="photo-strip" data-photo-strip="${escapeHtml(td.id)}||${escapeHtml((asset && asset.asset) || '')}">`;
+  for (const pid of photoIds) {
+    html += `<div class="photo-thumb" data-photo-id="${escapeHtml(pid)}">`;
+    html += `<img alt="" data-photo-id="${escapeHtml(pid)}">`;
+    html += `<button class="photo-del" data-action="del-photo" data-photo-id="${escapeHtml(pid)}" data-task-id="${escapeHtml(td.id)}" data-asset="${escapeHtml((asset && asset.asset) || '')}">×</button>`;
+    html += `</div>`;
+  }
+  html += `<label class="photo-add-btn">+`;
+  html += `<input type="file" accept="image/*" capture="environment" data-action="add-photo" data-task-id="${escapeHtml(td.id)}" data-asset="${escapeHtml((asset && asset.asset) || '')}" data-can="${escapeHtml((asset && asset.can) || '')}">`;
+  html += `</label>`;
+  html += `</div>`;
+
+  html += `</div>`;
+  return html;
+}
+
+/**
+ * Render the "Add outlet" form. Used when the technician arrives at a
+ * site and finds an outlet not in the register.
+ *
+ * Sets APP.addingOutlet = true; the form gathers asset name, type,
+ * and optional CAN, then adds a new outlet with the standard subtask
+ * template for that type into visit.new_assets[] (same storage pattern
+ * as the old "add asset" flow, so the bundle export carries it through
+ * as a new_assets entry for the office to review).
+ */
+function renderAddOutletForm() {
+  return `
+    <div class="add-asset-form">
+      <label style="font-size: 12px; font-weight: 600; color: var(--fg-soft); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Add an unlisted outlet</label>
+      <div style="margin-bottom: 8px;">
+        <input type="text" id="newOutletName" placeholder="Outlet name (e.g. TF Emergency Shower/Eyebath - Back Wall)" style="width: 100%; padding: 9px 10px; font: inherit; border: 1px solid var(--border-hi); border-radius: 6px; background: var(--surface);">
+      </div>
+      <div style="margin-bottom: 8px;">
+        <input type="text" id="newOutletCan" placeholder="Customer Asset Number (optional)" style="width: 100%; padding: 9px 10px; font: inherit; border: 1px solid var(--border-hi); border-radius: 6px; background: var(--surface);">
+      </div>
+      <label style="font-size: 12px; font-weight: 600; color: var(--fg-soft); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Outlet type</label>
+      <div style="margin-bottom: 10px;">
+        <select id="newOutletType" style="width: 100%; padding: 9px 10px; font: inherit; border: 1px solid var(--border-hi); border-radius: 6px; background: var(--surface);">
+          <option value="mf">Mains-fed (MF)</option>
+          <option value="tf">Tank-fed (TF)</option>
+          <option value="domestic_shower">Domestic shower</option>
+          <option value="spray_tap">Spray tap</option>
+        </select>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary" data-action="cancel-add-outlet" style="flex: 1;" type="button">Cancel</button>
+        <button class="btn btn-primary" data-action="confirm-add-outlet" style="flex: 1;" type="button">Add</button>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Build the subtask template for a newly added outlet, mirroring the
+ * classification logic in transform_sites.py. Kept here for parity so
+ * new outlets get the same treatment as pre-registered ones.
+ */
+function subtasksForNewOutlet(assetType, assetName) {
+  const n = (assetName || '').toLowerCase();
+  const hasShower = n.includes('shower');
+  const hasEyebath = n.includes('eyebath');
+  const subs = [];
+
+  if (assetType === 'domestic_shower') {
+    subs.push({ id: 'clean_shower', label: 'Clean showerhead', frequency: 'quarterly' });
+  } else if (assetType === 'spray_tap') {
+    subs.push({ id: 'clean_spray_tap', label: 'Clean spray tap', frequency: 'quarterly' });
+  } else if (assetType === 'mf') {
+    if (hasShower)  subs.push({ id: 'clean_shower',  label: 'Clean showerhead', frequency: 'quarterly' });
+    if (hasEyebath) subs.push({ id: 'clean_eyebath', label: 'Clean eyebath',    frequency: 'quarterly' });
+    if (!hasShower && !hasEyebath) {
+      // Fallback if the name doesn't specify — treat as combo so both subtasks appear
+      subs.push({ id: 'clean_shower',  label: 'Clean showerhead', frequency: 'quarterly' });
+      subs.push({ id: 'clean_eyebath', label: 'Clean eyebath',    frequency: 'quarterly' });
+    }
+  } else if (assetType === 'tf') {
+    if (hasShower)  subs.push({ id: 'clean_shower',  label: 'Clean showerhead', frequency: 'six_monthly' });
+    if (hasEyebath) subs.push({ id: 'clean_eyebath', label: 'Clean eyebath',    frequency: 'six_monthly' });
+    if (!hasShower && !hasEyebath) {
+      subs.push({ id: 'clean_shower',  label: 'Clean showerhead', frequency: 'six_monthly' });
+      subs.push({ id: 'clean_eyebath', label: 'Clean eyebath',    frequency: 'six_monthly' });
+    }
+    subs.push({ id: 'visual_tank', label: 'Visual: header tank',           frequency: 'six_monthly' });
+    subs.push({ id: 'lp_sample',   label: 'Legionella pneumophila sample', frequency: 'six_monthly' });
+  }
+
+  return subs;
+}
+
+function renderStatusDot(status) {
+  if (status === 'Done')      return '<span class="status-dot done">✓</span>';
+  if (status === 'Unable')    return '<span class="status-dot unable">!</span>';
+  if (status === 'NotNeeded') return '<span class="status-dot notneeded">–</span>';
+  return '<span class="status-dot"></span>';
+}
+
+function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
+
+/* ============================================================
+   Event wiring — declarative via data-action attributes
+============================================================ */
+function wireTaskListHandlers() {
+  const root = document.getElementById('taskList');
+
+  root.onclick = async (e) => {
+    const action = e.target.closest('[data-action]')?.dataset.action;
+    if (!action) return;
+    const t = e.target.closest('[data-action]');
+
+    // Don't trigger row toggle when clicking inside the form
+    if (action === 'toggle-row') {
+      e.stopPropagation();
+      const taskId = t.dataset.taskId;
+      const asset = t.dataset.asset;
+      const key = taskId + '||' + asset;
+      if (APP.expandedAssetRows.has(key)) APP.expandedAssetRows.delete(key);
+      else APP.expandedAssetRows.add(key);
+      await renderTaskList();
+      // Restore scroll roughly to where the row is
+      const newRow = root.querySelector(`[data-task-id="${cssEsc(taskId)}"][data-asset="${cssEsc(asset)}"]`);
+      if (newRow) newRow.scrollIntoView({ block: 'center', behavior: 'instant' });
+      return;
+    }
+
+    if (action === 'set-status') {
+      e.stopPropagation();
+      const { taskId, status, asset, can } = t.dataset;
+      const patch = { status };
+      // Clear inappropriate fields when status changes
+      if (status === 'Done')      { /* keep condition + notes */ }
+      else if (status === 'Pending') { patch.condition = null; patch.status_reason = null; }
+      else                           { patch.condition = null; }
+      await updateResult(taskId, asset || null, can || null, patch);
+      await renderTaskList();
+      return;
+    }
+
+    if (action === 'set-condition') {
+      e.stopPropagation();
+      const { taskId, condition, asset } = t.dataset;
+      await updateResult(taskId, asset || null, null, { condition });
+      await renderTaskList();
+      return;
+    }
+
+    if (action === 'add-outlet') {
+      e.stopPropagation();
+      APP.addingOutlet = true;
+      await renderTaskList();
+      const input = document.getElementById('newOutletName');
+      if (input) input.focus();
+      return;
+    }
+
+    if (action === 'cancel-add-outlet') {
+      e.stopPropagation();
+      APP.addingOutlet = false;
+      await renderTaskList();
+      return;
+    }
+
+    if (action === 'confirm-add-outlet') {
+      e.stopPropagation();
+      const nameEl = document.getElementById('newOutletName');
+      const canEl = document.getElementById('newOutletCan');
+      const typeEl = document.getElementById('newOutletType');
+      const name = nameEl.value.trim();
+      const can = canEl.value.trim();
+      const type = typeEl.value;
+      if (!name) { toast('Outlet name required', true); return; }
+
+      const subtasks = subtasksForNewOutlet(type, name);
+      if (subtasks.length === 0) {
+        toast('Could not derive subtasks for this outlet type', true);
+        return;
+      }
+
+      const v = await BWStorage.getVisit(APP.currentVisitId);
+      if (!v.new_assets) v.new_assets = [];
+      v.new_assets.push({
+        asset: name,
+        can: can || null,
+        type: type,
+        subtasks: subtasks,
+        added_at: new Date().toISOString(),
+      });
+      await BWStorage.saveVisit(v);
+      APP.currentVisit = v;
+      APP.addingOutlet = false;
+      await renderTaskList();
+      return;
+    }
+
+    if (action === 'del-photo') {
+      e.stopPropagation();
+      if (!confirm('Delete this photo?')) return;
+      const { photoId, taskId, asset } = t.dataset;
+      await deletePhoto(photoId, taskId, asset || null);
+      await renderTaskList();
+      return;
+    }
+  };
+
+  root.oninput = async (e) => {
+    const action = e.target.dataset.action;
+    if (!action) return;
+    if (action === 'set-notes') {
+      const { taskId, asset } = e.target.dataset;
+      // Debounce by deferring to the next tick (good enough for our scale)
+      clearTimeout(APP._notesTimer);
+      APP._notesTimer = setTimeout(async () => {
+        await updateResult(taskId, asset || null, null, { notes: e.target.value });
+      }, 250);
+      return;
+    }
+    if (action === 'set-reason') {
+      const { taskId, asset } = e.target.dataset;
+      clearTimeout(APP._reasonTimer);
+      APP._reasonTimer = setTimeout(async () => {
+        await updateResult(taskId, asset || null, null, { status_reason: e.target.value });
+      }, 250);
+      return;
+    }
+  };
+
+  root.onchange = async (e) => {
+    if (e.target.dataset.action === 'add-photo') {
+      dbg('step', 'add-photo: change event fired');
+      try {
+        const file = e.target.files && e.target.files[0];
+        if (!file) {
+          dbg('error', 'add-photo: no file in event.target.files', {
+            hasFiles: !!e.target.files,
+            filesLength: e.target.files ? e.target.files.length : 'n/a',
+          });
+          return;
+        }
+        dbg('step', 'add-photo: file received', {
+          name: file.name, size: file.size, type: file.type,
+        });
+
+        const { taskId, asset, can } = e.target.dataset;
+        dbg('step', 'add-photo: dataset', { taskId, asset, can, visitId: APP.currentVisitId });
+
+        if (!APP.currentVisitId) {
+          dbg('error', 'add-photo: no APP.currentVisitId — visit context is missing');
+          toast('Cannot save photo: visit not open', true);
+          return;
+        }
+
+        // Compress before storage — turns a 4MB phone photo into ~200KB
+        // so we can hold 100+ photos without running into IndexedDB limits.
+        dbg('step', 'add-photo: compressing');
+        const compressed = await compressPhoto(file);
+
+        dbg('step', 'add-photo: calling BWStorage.addPhoto');
+        const photoId = await BWStorage.addPhoto(APP.currentVisitId, compressed);
+        dbg('ok', 'add-photo: photo saved to storage', { photoId, size: compressed.size });
+
+        // Append to the result's photo_ids
+        const v = await BWStorage.getVisit(APP.currentVisitId);
+        if (!v) {
+          dbg('error', 'add-photo: getVisit returned null after addPhoto');
+          return;
+        }
+        let entry = (v.task_results || []).find(
+          (r) => r.task_id === taskId && (r.asset || null) === (asset || null)
+        );
+        if (!entry) {
+          dbg('step', 'add-photo: creating new task_result entry');
+          entry = {
+            task_id: taskId, asset: asset || null, customer_asset_no: can || null,
+            status: 'Pending', condition: null, notes: '', photo_ids: [], status_reason: null, completed_at: null,
+          };
+          if (!v.task_results) v.task_results = [];
+          v.task_results.push(entry);
+        } else {
+          dbg('step', 'add-photo: found existing task_result entry');
+        }
+        if (!entry.photo_ids) entry.photo_ids = [];
+        entry.photo_ids.push(photoId);
+        dbg('step', 'add-photo: about to saveVisit', { photoCount: entry.photo_ids.length });
+        await BWStorage.saveVisit(v);
+        dbg('ok', 'add-photo: visit saved');
+
+        APP.currentVisit = v;
+        e.target.value = '';
+        dbg('step', 'add-photo: calling renderTaskList');
+        await renderTaskList();
+        dbg('ok', 'add-photo: renderTaskList completed');
+      } catch (err) {
+        dbg('error', 'add-photo: threw exception', err);
+        toast('Photo failed: ' + err.message, true);
+      }
+    }
+  };
+
+  // After render, hydrate photo thumbnails (object URLs from blobs)
+  hydratePhotos();
+}
+
+async function hydratePhotos() {
+  const imgs = document.querySelectorAll('img[data-photo-id]');
+  if (imgs.length > 0) dbg('step', 'hydratePhotos: found ' + imgs.length + ' img element(s)');
+  for (const img of imgs) {
+    const pid = img.dataset.photoId;
+    try {
+      const photo = await BWStorage.getPhoto(pid);
+      if (photo && photo.blob) {
+        img.src = URL.createObjectURL(photo.blob);
+        dbg('ok', 'hydratePhotos: img hydrated', { pid, blobSize: photo.blob.size });
+      } else {
+        dbg('error', 'hydratePhotos: photo missing or no blob', { pid, hasPhoto: !!photo });
+      }
+    } catch (err) {
+      dbg('error', 'hydratePhotos: getPhoto failed', { pid, err: err.message });
+    }
+  }
+}
+
+async function deletePhoto(photoId, taskId, assetName) {
+  const v = await BWStorage.getVisit(APP.currentVisitId);
+  const entry = (v.task_results || []).find(
+    (r) => r.task_id === taskId && (r.asset || null) === (assetName || null)
+  );
+  if (entry && entry.photo_ids) {
+    entry.photo_ids = entry.photo_ids.filter((p) => p !== photoId);
+  }
+  await BWStorage.saveVisit(v);
+
+  // Also delete the actual photo blob. We do this via a direct IDB tx because
+  // the storage layer's deletion API only cascades from visits.
+  const dbReq = indexedDB.open('bw_field_app');
+  await new Promise((res, rej) => {
+    dbReq.onsuccess = () => {
+      const db = dbReq.result;
+      const tx = db.transaction('photos', 'readwrite');
+      tx.objectStore('photos').delete(photoId);
+      tx.oncomplete = () => { db.close(); res(); };
+      tx.onerror = () => rej(tx.error);
+    };
+  });
+  APP.currentVisit = v;
+}
+
+/* ============================================================
+   Progress
+============================================================ */
+function updateProgress() {
+  const v = APP.currentVisit;
+  if (!v) return;
+  const workList = buildTaskList(v);
+
+  let totalRows = 0;
+  let doneRows = 0;
+
+  // Count outlet subtasks
+  for (const item of workList.outlets) {
+    for (const st of item.visible_subtasks) {
+      totalRows++;
+      const r = findResult(v, st.id, item.outlet.asset);
+      if (r && r.status !== 'Pending') doneRows++;
+    }
+  }
+
+  // Count site-level items
+  for (const item of workList.site_level_items) {
+    totalRows++;
+    const r = findResult(v, item.id, null);
+    if (r && r.status !== 'Pending') doneRows++;
+  }
+
+  const pct = totalRows > 0 ? Math.round(100 * doneRows / totalRows) : 0;
+  const fill = document.getElementById('progressFill');
+  const text = document.getElementById('progressText');
+  const meta = document.getElementById('progressMeta');
+  if (fill) fill.style.width = pct + '%';
+  if (text) text.textContent = `${doneRows} of ${totalRows} addressed`;
+  if (meta) meta.textContent = pct === 100 ? 'All done' : '';
+}
+
+/* ============================================================
+   Complete visit — mark status='complete'
+============================================================ */
+async function bwCompleteWorkItem() {
+  const v = APP.currentVisit;
+  if (!v) return;
+
+  const pendingCount = countPendingTasks(v);
+  if (pendingCount > 0) {
+    if (!confirm(`There are still ${pendingCount} task${pendingCount === 1 ? '' : 's'} not addressed. Mark visit complete anyway?`)) return;
+  }
+
+  v.status = 'complete';
+  v.completed_at = new Date().toISOString();
+  await BWStorage.saveVisit(v);
+  toast('Visit marked complete.');
+
+  // Show the visit-complete confirmation screen so the technician can
+  // hop straight into the next site without re-picking visit type,
+  // date, and technician.
+  showVisitCompleteScreen(v);
+}
+
+/**
+ * Show the visit-complete confirmation screen. Populates it with a summary
+ * of what was addressed in the visit that just finished, and stashes the
+ * visit_type/technician/date on APP.lastCompleted so the "+ Next site"
+ * button can carry them forward.
+ */
+function showVisitCompleteScreen(v) {
+  APP.lastCompleted = {
+    visit_type: v.visit_type,
+    technician: v.technician,
+    date:       v.date,
+  };
+
+  const workList = buildTaskList(v);
+  let totalRows = 0;
+  let doneRows = 0;
+  for (const item of workList.outlets) {
+    for (const st of item.visible_subtasks) {
+      totalRows++;
+      const r = findResult(v, st.id, item.outlet.asset);
+      if (r && r.status !== 'Pending') doneRows++;
+    }
+  }
+  for (const item of workList.site_level_items) {
+    totalRows++;
+    const r = findResult(v, item.id, null);
+    if (r && r.status !== 'Pending') doneRows++;
+  }
+
+  // Photo count
+  let photoCount = 0;
+  for (const r of (v.task_results || [])) photoCount += (r.photo_ids || []).length;
+  for (const dr of (v.device_records || [])) photoCount += (dr.photo_ids || []).length;
+
+  // Issues flagged (attention / urgent condition on any task_result)
+  let flaggedCount = 0;
+  for (const r of (v.task_results || [])) {
+    if (r.condition === 'attention' || r.condition === 'urgent') flaggedCount++;
+  }
+
+  const pending = totalRows - doneRows;
+
+  document.getElementById('completeTitle').textContent = v.site + ' complete';
+  document.getElementById('completeSub').textContent =
+    `${visitTypeLabel(v.visit_type)} visit • ${v.technician}`;
+
+  let statsHtml = '';
+  statsHtml += `<div class="complete-stat-row">`;
+  statsHtml += `<span class="cs-label">Tasks addressed</span>`;
+  statsHtml += `<span class="cs-value">${doneRows} of ${totalRows}</span>`;
+  statsHtml += `</div>`;
+  statsHtml += `<div class="complete-stat-row">`;
+  statsHtml += `<span class="cs-label">Photos captured</span>`;
+  statsHtml += `<span class="cs-value">${photoCount}</span>`;
+  statsHtml += `</div>`;
+  statsHtml += `<div class="complete-stat-row${flaggedCount > 0 ? ' warn' : ''}">`;
+  statsHtml += `<span class="cs-label">Issues flagged</span>`;
+  statsHtml += `<span class="cs-value">${flaggedCount}</span>`;
+  statsHtml += `</div>`;
+  if (pending > 0) {
+    statsHtml += `<div class="complete-stat-row warn">`;
+    statsHtml += `<span class="cs-label">Not addressed</span>`;
+    statsHtml += `<span class="cs-value">${pending}</span>`;
+    statsHtml += `</div>`;
+  }
+  document.getElementById('completeStats').innerHTML = statsHtml;
+
+  APP.screenStack = ['home'];
+  showScreen('visitComplete', false);
+}
+
+/**
+ * Start a new visit at the next site, carrying forward the visit type,
+ * technician, and date from the last completed visit. Skips the confirm
+ * screen entirely — assumption is that when doing a multi-site day, the
+ * technician doesn't want to re-tap details they already picked.
+ */
+function nextSite() {
+  const last = APP.lastCompleted;
+  if (!last) {
+    // Shouldn't happen — but if it does, fall back to normal flow
+    goVisitType();
+    return;
+  }
+  APP.draft = {
+    visit_type:      last.visit_type,
+    site:            null,
+    carry_technician: last.technician,
+    carry_date:      last.date,
+  };
+  document.getElementById('headerSubtitle').textContent =
+    `New ${visitTypeLabel(last.visit_type)} visit`;
+  goSitePicker();
+}
+
+function countPendingTasks(v) {
+  const workList = buildTaskList(v);
+  let pending = 0;
+
+  for (const item of workList.outlets) {
+    for (const st of item.visible_subtasks) {
+      const r = findResult(v, st.id, item.outlet.asset);
+      if (!r || r.status === 'Pending') pending++;
+    }
+  }
+
+  for (const item of workList.site_level_items) {
+    const r = findResult(v, item.id, null);
+    if (!r || r.status === 'Pending') pending++;
+  }
+
+  return pending;
+}
+
+/* ============================================================
+   CSS escaping for attribute selectors (asset names contain special chars)
+============================================================ */
+function cssEsc(s) {
+  // Use CSS.escape if available, otherwise a manual fallback for older browsers.
+  if (typeof CSS !== 'undefined' && CSS.escape) return CSS.escape(s);
+  return String(s).replace(/[^a-zA-Z0-9_-]/g, (c) => '\\' + c);
+}
+
+function resumeVisit(visitId) {
+  openVisit(visitId);
+}
+
+async function abandonVisit() {
+  if (!APP.currentVisitId) { goHome(); return; }
+  await abandonVisitById(APP.currentVisitId);
+}
+
+async function abandonVisitById(visitId) {
+  if (!confirm('Discard this visit and all its data? This cannot be undone.')) return;
+  try {
+    await BWStorage.deleteVisit(visitId);
+    APP.currentVisitId = null;
+    APP.currentVisit = null;
+    document.getElementById('headerSubtitle').textContent = 'Field Reports';
+    toast('Visit discarded.');
+    goHome();
+  } catch (err) {
+    toast('Could not delete visit: ' + err.message, true);
+  }
+}
+
+/* ============================================================
+   Utilities
+============================================================ */
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   Bundle export
+============================================================ */
+
+const BUNDLE_SCHEMA_VERSION = 3;
+
+/**
+ * Convert a Blob into a base64 data URL. We embed photos inline rather than
+ * referencing separate files so the bundle is self-contained.
+ */
+function blobToDataURL(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * Compress a photo before it hits IndexedDB.
+ *
+ * iPhone/Android photos are typically 3000+ pixels wide and 3-4 MB per file.
+ * We render at postcard size in the PDF (~55mm across), so 1600px on the
+ * long edge is more than enough. Reduces storage ~15-20x, letting us hold
+ * 100+ photos per bundle without running into iOS Safari's storage quota.
+ *
+ * EXIF orientation is baked into the pixels here — the browser applies it
+ * during decode via `imageOrientation: 'from-image'`, and the re-encoded
+ * JPEG contains no orientation flag, so all downstream consumers (the
+ * bundle export, the Python generator, PDF viewers) see the same pixels
+ * without needing to worry about rotation.
+ *
+ * Falls back to the original file if compression fails for any reason —
+ * better to store a big photo than lose it.
+ */
+async function compressPhoto(file) {
+  const MAX_LONG_EDGE = 1600;
+  const JPEG_QUALITY = 0.82;
+
+  try {
+    dbg('step', 'compressPhoto: start', { size: file.size, type: file.type });
+
+    // Decode with EXIF orientation baked into pixels
+    let bitmap;
+    try {
+      bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    } catch (err) {
+      // Some older browsers don't support the imageOrientation option
+      dbg('info', 'compressPhoto: createImageBitmap with EXIF option failed, retrying without', err.message);
+      bitmap = await createImageBitmap(file);
+    }
+
+    const srcW = bitmap.width;
+    const srcH = bitmap.height;
+    const longEdge = Math.max(srcW, srcH);
+
+    // Compute target size
+    let dstW = srcW, dstH = srcH;
+    if (longEdge > MAX_LONG_EDGE) {
+      const scale = MAX_LONG_EDGE / longEdge;
+      dstW = Math.round(srcW * scale);
+      dstH = Math.round(srcH * scale);
+    }
+
+    // Draw to a canvas at target size
+    const canvas = document.createElement('canvas');
+    canvas.width = dstW;
+    canvas.height = dstH;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(bitmap, 0, 0, dstW, dstH);
+
+    // Release the bitmap early (large in memory)
+    if (bitmap.close) bitmap.close();
+
+    // Encode as JPEG
+    const blob = await new Promise((resolve) => {
+      canvas.toBlob(resolve, 'image/jpeg', JPEG_QUALITY);
+    });
+
+    if (!blob) {
+      dbg('error', 'compressPhoto: canvas.toBlob returned null — falling back to original');
+      return file;
+    }
+
+    dbg('ok', 'compressPhoto: done', {
+      before: file.size, after: blob.size,
+      ratio: (file.size / blob.size).toFixed(1) + 'x',
+      dims: `${srcW}x${srcH} -> ${dstW}x${dstH}`,
+    });
+
+    return blob;
+  } catch (err) {
+    dbg('error', 'compressPhoto: threw, falling back to original', err);
+    return file;
+  }
+}
+
+/**
+ * Strip internal-only bookkeeping fields before export. Legacy asset entries
+ * (from the pre-outlet-first model) carried `_for_task_id` as UI plumbing —
+ * we rename it to `for_task_id`. New-style outlet entries have a `subtasks`
+ * array and don't need `for_task_id` at all.
+ */
+function sanitiseVisitForBundle(v) {
+  const out = JSON.parse(JSON.stringify(v));
+  if (out.new_assets) {
+    out.new_assets = out.new_assets.map((a) => {
+      const { _for_task_id, ...rest } = a;
+      if (_for_task_id) {
+        return { ...rest, for_task_id: _for_task_id };
+      }
+      return rest;
+    });
+  }
+  return out;
+}
+
+/**
+ * For each visit, derive pending_remedials from any Attention/Urgent
+ * condition flags the technician set. Done at export time (not save time)
+ * so the technician can change their mind freely up to the point of
+ * pressing Export.
+ */
+function buildPendingRemedialsForVisit(v) {
+  const out = [];
+  for (const r of (v.task_results || [])) {
+    if (r.condition === 'attention' || r.condition === 'urgent') {
+      out.push({
+        asset:      r.asset || null,
+        can:        r.customer_asset_no || null,
+        note:       (r.notes || '').trim() || `(${r.condition} condition flagged, no note provided)`,
+        condition:  r.condition,
+        flagged_at: r.completed_at || new Date().toISOString(),
+        task_id:    r.task_id,
+      });
+    }
+  }
+  return out;
+}
+
+/**
+ * Build the bundle for every complete-but-not-yet-exported visit.
+ * Photos (both task photos and device maintenance photos) are inlined as
+ * base64 data URLs so the bundle is a single self-contained file.
+ */
+
+
+/* ============================================================
+   Unified-app overrides
+   ------------------------------------------------------------
+   Everything above is the ported Bristol Water code. These
+   replace the handful of functions whose behaviour has to differ
+   now that a visit can carry more than one work item.
+============================================================ */
+
+// State the ported code expects
+APP.currentWorkItemId = null;
+APP.currentVisit      = null;
+APP.remedials         = null;
+APP.deviceDraft       = null;
+APP.deviceEditId      = null;
+APP.expandedAssetRows = new Set();
+APP.addingOutlet      = false;
+APP.carry             = null;
+
+/**
+ * The visit overview — the envelope, listing its work items.
+ * A visit with exactly one work item skips straight into it, so the
+ * common case is no slower than the old single-purpose app.
+ */
+async function openVisitOverview(visitId, force) {
+  const v = await CTKStorage.getVisit(visitId);
+  if (!v) { toast('Visit not found', true); return; }
+  APP.currentVisitId = visitId;
+  APP.currentVisitSiteRef = v.site_ref || null;
+
+  // Skip the overview when there's a single work item that has a form to
+  // open — but not for types still to be built, or the technician lands
+  // nowhere at all.
+  const only = v.work_items.length === 1 ? v.work_items[0] : null;
+  if (!force && only && (CTKSchema.isBWType(only.type) || only.type === 'installation')) {
+    await openWorkItem(visitId, only.work_item_id);
+    return;
+  }
+
+  document.getElementById('headerSubtitle').textContent = v.site;
+  const newFlag = v.meta && v.meta.client_is_new
+    ? '<span class="newflag">New client</span>' : '';
+  document.getElementById('visitHeader').innerHTML =
+    '<h2 style="margin-bottom:2px">' + escapeHtml(v.site) + newFlag + '</h2>' +
+    '<p class="lede">' + escapeHtml(v.client) + ' \u00b7 ' + escapeHtml(v.date) +
+      ' \u00b7 ' + escapeHtml(v.technician) + '</p>';
+
+  renderWorkItems(v);
+  APP.screenStack = ['home', 'visitOverview'];
+  showScreen('visitOverview', false);
+}
+
+/** Open one work item's form. */
+async function openWorkItem(visitId, workItemId) {
+  const v = await CTKStorage.getVisit(visitId);
+  if (!v) { toast('Visit not found', true); return; }
+  const item = (v.work_items || []).find((w) => w.work_item_id === workItemId);
+  if (!item) { toast('Work item not found', true); return; }
+
+  APP.currentVisitId    = visitId;
+  APP.currentWorkItemId = workItemId;
+
+  if (item.type === 'installation') {
+    APP.currentVisit = { _visit: v, _item: item };
+    await openInstall(visitId, workItemId);
+    return;
+  }
+  if (!CTKSchema.isBWType(item.type)) {
+    toast(CTKSchema.workType(item.type).label + ' form comes in the next build step.');
+    await openVisitOverview(visitId, true);
+    return;
+  }
+
+  // The ported task list needs the site list and the remedials register
+  try {
+    if (!APP.sites) APP.sites = (await CTKStorage.loadSites()).sites || [];
+  } catch (err) {
+    toast('Could not load the site list: ' + err.message, true); return;
+  }
+  try {
+    if (!APP.remedials) APP.remedials = await CTKStorage.loadRemedials();
+  } catch (err) {
+    APP.remedials = { items: [] };   // an empty register is a normal state
+  }
+
+  await openVisit(visitId);          // ported entry point, renders the task list
+  APP.screenStack = ['home', 'visitOverview', 'visit'];
+  updateBackButton();
+}
+
+/** Mark this work item complete, and the visit too once all of them are. */
+async function completeVisit() {
+  await bwCompleteWorkItem();
+
+  const v = await CTKStorage.getVisit(APP.currentVisitId);
+  if (!v) return;
+  const allDone = v.work_items.length > 0 &&
+                  v.work_items.every((w) => w.status === 'complete');
+  if (allDone && v.status !== 'complete') {
+    v.status = 'complete';
+    v.completed_at = new Date().toISOString();
+    await CTKStorage.saveVisit(v);
+  }
+}
+
+/** "+ Next site" — carry the cadence, date and technician forward. */
+function nextSite() {
+  const last = APP.lastCompleted;
+  APP.addingToVisit = null;
+  APP.draft = {
+    type: 'bristol_water',
+    site: null,
+    cadence: last ? last.visit_type : null,
+  };
+  APP.carry = last ? { date: last.date, technician: last.technician } : null;
+  APP.screenStack = ['home'];
+  if (last) {
+    document.getElementById('headerSubtitle').textContent =
+      'New ' + visitTypeLabel(last.visit_type) + ' visit';
+  }
+  goSitePicker();
+}
+
+
+/* ============================================================
+   Export
+   ------------------------------------------------------------
+   The app holds one unified bundle internally, but the office
+   still runs the two existing generators. splitForGenerators()
+   converts back into the exact shapes those tools already read,
+   so bw_report_generator.py and generate_install_report.js need
+   no changes at all.
+============================================================ */
+
+let EXPORT_WARNINGS = [];
+
+/** Inline a work item's photos as base64 so the bundle is self-contained. */
+async function inlinePhotos(dataBlock) {
+  // Installation photos hang off sections/devices and gateways rather than
+  // a flat list, so collect those into the same shape first.
+  const extra = [];
+  for (const sec of (dataBlock.sections || [])) {
+    for (const dev of (sec.devices || [])) extra.push(dev);
+  }
+  for (const gw of (dataBlock.gateways || [])) extra.push(gw);
+
+  for (const listName of ['task_results', 'device_records', '__extra']) {
+    const list = listName === '__extra' ? extra : (dataBlock[listName] || []);
+    for (const rec of list) {
+      const ids = rec.photo_ids || [];
+      const photos = [];
+      for (const pid of ids) {
+        // One unreadable photo must never block the whole export — a
+        // technician's day of work is worth more than one image.
+        try {
+          const p = await CTKStorage.getPhoto(pid);
+          if (!p || !p.blob) { EXPORT_WARNINGS.push('photo ' + pid + ' missing'); continue; }
+          photos.push({
+            photo_id:    pid,
+            captured_at: p.captured_at,
+            mime:        p.blob.type || 'image/jpeg',
+            data:        await blobToDataURL(p.blob),
+          });
+        } catch (err) {
+          EXPORT_WARNINGS.push('photo ' + pid + ' unreadable: ' + err.message);
+          dbg('error', 'export: photo failed', { pid, err: String(err) });
+        }
+      }
+      rec.photos = photos;
+      delete rec.photo_ids;
+    }
+  }
+  return dataBlock;
+}
+
+/** Build the unified bundle from every complete, not-yet-exported visit. */
+async function buildExportBundle() {
+  const complete = (await CTKStorage.getAllVisits())
+    .filter((v) => v.status === 'complete');
+  if (!complete.length) throw new Error('No completed visits to export.');
+
+  const prepared = [];
+  for (const v of complete) {
+    const copy = JSON.parse(JSON.stringify(v));
+    for (const wi of copy.work_items) {
+      if (CTKSchema.isBWType(wi.type)) {
+        const { _for_task_id, ...rest } = {};
+        wi.data.new_assets = (wi.data.new_assets || []).map((a) => {
+          const { _for_task_id: t, ...r } = a;
+          return t ? { ...r, for_task_id: t } : r;
+        });
+        if (!wi.data.pending_remedials || !wi.data.pending_remedials.length) {
+          wi.data.pending_remedials = buildPendingRemedialsForVisit(wi.data);
+        }
+      }
+      await inlinePhotos(wi.data);
+    }
+    prepared.push(copy);
+  }
+
+  return {
+    bundle: CTKSchema.buildBundleEnvelope(prepared, { app_version: APP_BUILD }),
+    visitIds: complete.map((v) => v.visit_id),
+  };
+}
+
+function downloadJSON(filename, obj) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function safeName(s) {
+  return String(s || '').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 28);
+}
+
+/**
+ * Export. Produces one file per generator, named so it's obvious in the
+ * office which tool each one goes to.
+ */
+async function exportBundle() {
+  EXPORT_WARNINGS = [];
+  let built;
+  try {
+    built = await buildExportBundle();
+  } catch (err) {
+    toast(err.message, true);
+    return;
+  }
+
+  const split = CTKSchema.splitForGenerators(built.bundle);
+  const today = new Date().toISOString().slice(0, 10);
+  const files = [];
+
+  if (split.bw) {
+    downloadJSON('BW_field_report_' + today + '.json', split.bw);
+    files.push('Bristol Water (' + split.bw.visit_count + ')');
+  }
+  for (const job of (split.install || [])) {
+    downloadJSON('CTK_Install_' + safeName(job.job.site) + '_' + today + '.json', job);
+    files.push('Install: ' + job.job.site);
+  }
+
+  if (!files.length) {
+    toast('Nothing to export for the current generators.', true);
+    return;
+  }
+
+  // Mark exported — they stay on the device until the office confirms,
+  // or the 30-day fallback clears them.
+  for (const id of built.visitIds) {
+    const v = await CTKStorage.getVisit(id);
+    if (!v) continue;
+    v.status = 'exported';
+    v.exported_at = new Date().toISOString();
+    await CTKStorage.saveVisit(v);
+  }
+
+  if (EXPORT_WARNINGS.length) {
+    toast(files.join(', ') + ' \u2014 but ' + EXPORT_WARNINGS.length +
+          ' photo(s) could not be read. See CTK_LOG.', true);
+  } else {
+    toast('Exported: ' + files.join(', '));
+  }
+  await refreshHome();
+}
+
+/** Home-screen export panel, shown only when there's something to send. */
+async function renderExportSlot() {
+  const slot = document.getElementById('exportSlot');
+  if (!slot) return;
+  const visits = await CTKStorage.getAllVisits();
+  const ready = visits.filter((v) => v.status === 'complete');
+  if (!ready.length) { slot.innerHTML = ''; return; }
+
+  const items = ready.reduce((n, v) => n + v.work_items.length, 0);
+  slot.innerHTML =
+    '<div class="resume" style="background:#f0fdf4;border-color:#bbf7d0">' +
+      '<div class="resume-title" style="color:#15803d">Ready to send</div>' +
+      '<div class="resume-site">' + ready.length + ' visit' + (ready.length === 1 ? '' : 's') +
+        ', ' + items + ' work item' + (items === 1 ? '' : 's') + '</div>' +
+      '<div class="btn-row">' +
+        '<button class="btn btn-primary" onclick="exportBundle()">Export for the office</button>' +
+      '</div>' +
+    '</div>';
+}
+
+/* ============================================================
+   INSTALLATION WORK ITEM
+   ------------------------------------------------------------
+   Rebuilt on the unified storage layer, keeping the interaction
+   model from the install app: status buttons per device, two
+   photo slots, device code with paste, channel rows, notes.
+
+   What deliberately changed:
+     - State lives in IndexedDB via CTKStorage, not localStorage.
+       The old app swallowed quota errors into a toast and kept
+       going with unsaved work; that's what lost a day at NMH.
+     - Delete device is available where the technician works,
+       not only on a setup tab.
+     - The schedule can be carried to the next day's visit.
+============================================================ */
+
+const INSTALL_STATUS = {
+  done:     { label: 'Installed',  cls: 'ok'   },
+  skipped:  { label: 'Skipped',    cls: 'skip' },
+  noaccess: { label: 'No access',  cls: 'warn' },
+};
+
+function installData() {
+  const wi = (APP.currentVisit && APP.currentVisit._item) || null;
+  return wi ? wi.data : null;
+}
+
+/** Load a fresh copy of the current install work item. */
+async function loadInstall() {
+  const v = await CTKStorage.getVisit(APP.currentVisitId);
+  if (!v) return null;
+  const wi = (v.work_items || []).find((w) => w.work_item_id === APP.currentWorkItemId);
+  if (!wi) return null;
+  return { visit: v, item: wi, data: wi.data };
+}
+
+async function saveInstall(ctx) {
+  ctx.item.updated_at = new Date().toISOString();
+  await CTKStorage.saveVisit(ctx.visit);
+}
+
+function uid(prefix) {
+  return (prefix || 'x') + '_' + Date.now().toString(36) + '_' +
+         Math.random().toString(36).slice(2, 8);
+}
+
+/* ------------------------------------------------------------
+   Entry point
+------------------------------------------------------------ */
+async function openInstall(visitId, workItemId) {
+  const ctx = await loadInstall();
+  if (!ctx) { toast('Work item not found', true); return; }
+
+  document.getElementById('headerSubtitle').textContent = ctx.visit.site;
+  document.getElementById('installHeading').textContent = ctx.visit.site;
+  document.getElementById('installLede').textContent =
+    [ctx.visit.client, ctx.data.block, ctx.visit.date, ctx.visit.technician]
+      .filter(Boolean).join(' \u00b7 ');
+
+  APP.screenStack = ['home', 'visitOverview', 'install'];
+  showScreen('install', false);
+  updateBackButton();
+  await renderInstall();
+}
+
+/* ------------------------------------------------------------
+   Rendering
+------------------------------------------------------------ */
+async function renderInstall() {
+  const ctx = await loadInstall();
+  if (!ctx) return;
+  const d = ctx.data;
+
+  const totals = installTotals(d);
+  document.getElementById('installProgressFill').style.width =
+    (totals.total ? Math.round((totals.addressed / totals.total) * 100) : 0) + '%';
+  document.getElementById('installProgressText').textContent =
+    totals.addressed + ' of ' + totals.total + ' devices addressed';
+  document.getElementById('installProgressMeta').textContent =
+    totals.done + ' installed' + (totals.noaccess ? ' \u00b7 ' + totals.noaccess + ' no access' : '');
+
+  let html = '';
+
+  // ── Job details ──────────────────────────────────────────
+  html +=
+    '<div class="task-block">' +
+      '<div class="task-block-head"><div class="tb-label">Job details</div></div>' +
+      '<div style="padding:0 14px 12px">' +
+        '<label class="inst-lbl">Block / area <span class="inst-opt">(optional)</span></label>' +
+        '<input class="dev-code-input" id="instBlock" value="' + escapeHtml(d.block || '') + '" ' +
+          'placeholder="e.g. Podium, Level 2" onchange="saveInstallField(\'block\', this.value)">' +
+        '<label class="inst-lbl" style="margin-top:10px">Job reference <span class="inst-opt">(optional)</span></label>' +
+        '<input class="dev-code-input" id="instRef" value="' + escapeHtml(d.ref || '') + '" ' +
+          'placeholder="Appears on the report" onchange="saveInstallField(\'ref\', this.value)">' +
+      '</div>' +
+    '</div>';
+
+  // ── Sections and devices ─────────────────────────────────
+  if (!(d.sections || []).length) {
+    html +=
+      '<div class="empty" style="margin-bottom:12px">' +
+        'No devices yet. Add them by hand, or paste a list from a spreadsheet.' +
+      '</div>';
+  }
+
+  for (const sec of (d.sections || [])) {
+    const devs = sec.devices || [];
+    const secDone = devs.filter((x) => x.status === 'done').length;
+    html +=
+      '<div class="task-block">' +
+        '<div class="task-block-head">' +
+          '<div class="tb-label">' + escapeHtml(sec.name) + '</div>' +
+          '<div class="tb-meta">' + secDone + ' of ' + devs.length + '</div>' +
+          '<button class="inst-sec-del" title="Remove section" ' +
+            'onclick="removeSection(\'' + sec.id + '\')">\u2715</button>' +
+        '</div>';
+
+    if (!devs.length) {
+      html += '<div class="ds-empty">No devices in this section yet.</div>';
+    }
+    for (const dev of devs) {
+      html += renderInstallDevice(sec, dev);
+    }
+    html +=
+      '<div style="padding:4px 12px 12px">' +
+        '<button class="btn btn-secondary btn-block" onclick="addDevice(\'' + sec.id + '\')">' +
+          '+ Add device to ' + escapeHtml(sec.name) + '</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  html +=
+    '<div class="btn-row" style="margin-bottom:16px">' +
+      '<button class="btn btn-secondary" onclick="addSection()">+ Add section</button>' +
+      '<button class="btn btn-secondary" onclick="openCsvImport()">Paste device list</button>' +
+    '</div>';
+
+  // ── Gateways ─────────────────────────────────────────────
+  html += '<div class="section-head">Gateways</div>';
+  if (!(d.gateways || []).length) {
+    html += '<div class="ds-empty">No gateways recorded.</div>';
+  }
+  for (const gw of (d.gateways || [])) {
+    html += renderGateway(gw);
+  }
+  html +=
+    '<button class="btn btn-secondary btn-block" style="margin-top:8px" ' +
+      'onclick="addGateway()">+ Add gateway</button>';
+
+  document.getElementById('installBody').innerHTML = html;
+  await hydrateInstallPhotos();
+}
+
+function renderInstallDevice(sec, dev) {
+  const st = INSTALL_STATUS[dev.status] || null;
+  const tag = st
+    ? '<span class="pill ' + (dev.status === 'done' ? 'green' :
+                              dev.status === 'noaccess' ? 'orange' : '') + '">' +
+        st.label + '</span>'
+    : '<span class="pill">Pending</span>';
+
+  const missing = [];
+  if (!dev.deviceCode) missing.push('device code');
+  if (!(dev.channels || []).some((c) => c.channel && c.measuringPoint)) missing.push('channel');
+  if (!(dev.photo_ids || []).length) missing.push('photo');
+
+  const warn = (dev.status === 'done' && missing.length)
+    ? '<div class="missing-strip"><span>\u26a0 Missing:</span><div class="missing-items">' +
+        missing.map((m) => '<span class="missing-pill">' + m + '</span>').join('') +
+      '</div></div>'
+    : '';
+
+  let slots = '';
+  for (let i = 0; i < 2; i++) {
+    const pid = (dev.photo_ids || [])[i];
+    if (pid) {
+      slots +=
+        '<div class="photo-slot filled" data-photo="' + pid + '">' +
+          '<button class="ph-rm" onclick="removeInstallPhoto(\'' + dev.id + '\',' + i + ',event)">\u2715</button>' +
+        '</div>';
+    } else {
+      slots +=
+        '<div class="photo-slot" onclick="document.getElementById(\'iph-' + dev.id + '-' + i + '\').click()">' +
+          '<div class="ph-icon">\u{1F4F7}</div>' +
+          '<div class="ph-label">Photo ' + (i + 1) + '</div>' +
+        '</div>';
+    }
+  }
+
+  return '<div class="dev-card" id="idc-' + dev.id + '">' +
+    '<input type="file" accept="image/*" capture="environment" class="ph-input" ' +
+      'id="iph-' + dev.id + '-0" onchange="handleInstallPhoto(\'' + dev.id + '\',0,this)">' +
+    '<input type="file" accept="image/*" capture="environment" class="ph-input" ' +
+      'id="iph-' + dev.id + '-1" onchange="handleInstallPhoto(\'' + dev.id + '\',1,this)">' +
+    '<div class="dev-card-hd">' +
+      '<div class="dev-card-info">' +
+        '<div class="dev-name">' + escapeHtml(dev.name || dev.code || 'Device') + '</div>' +
+        (dev.code ? '<div class="wi-sub">' + escapeHtml(dev.code) + '</div>' : '') +
+      '</div>' + tag +
+      '<button class="inst-sec-del" title="Remove device" ' +
+        'onclick="removeDevice(\'' + sec.id + '\',\'' + dev.id + '\')">\u2715</button>' +
+    '</div>' +
+    warn +
+    '<div style="padding:2px 14px 10px">' +
+      '<label class="inst-lbl">Device code</label>' +
+      '<div class="code-row">' +
+        '<input class="dev-code-input" id="idci-' + dev.id + '" ' +
+          'placeholder="e.g. gn-DB1700000F81216E" value="' + escapeHtml(dev.deviceCode || '') + '" ' +
+          'onchange="saveDeviceField(\'' + dev.id + '\',\'deviceCode\',this.value)">' +
+        '<button class="paste-btn" onclick="pasteDeviceCode(\'' + dev.id + '\',event)">\u{1F4CB} Paste</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="photo-row">' + slots + '</div>' +
+    renderChannels(dev) +
+    '<textarea class="dev-notes" placeholder="Notes (optional)\u2026" ' +
+      'onchange="saveDeviceField(\'' + dev.id + '\',\'notes\',this.value)">' +
+      escapeHtml(dev.notes || '') + '</textarea>' +
+    '<div class="dev-actions">' +
+      '<button class="btn btn-green" onclick="markDevice(\'' + dev.id + '\',\'done\')">\u2713 Installed</button>' +
+      '<button class="btn btn-grey" onclick="markDevice(\'' + dev.id + '\',\'skipped\')">\u2715 Skip</button>' +
+      '<button class="btn btn-amber" onclick="markDevice(\'' + dev.id + '\',\'noaccess\')">\u26a0 No access</button>' +
+      '<button class="dev-btn-reset" onclick="markDevice(\'' + dev.id + '\',null)">\u21ba</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderChannels(dev) {
+  const rows = (dev.channels || []);
+  let html = '<div class="chan-block"><div class="chan-label">Channels</div>';
+  if (!rows.length) {
+    html += '<div class="ds-empty" style="padding:6px 0">None set</div>';
+  }
+  rows.forEach((r, i) => {
+    html +=
+      '<div class="chan-row">' +
+        '<input class="dev-code-input" placeholder="Channel" value="' + escapeHtml(r.channel || '') + '" ' +
+          'onchange="saveChannel(\'' + dev.id + '\',' + i + ',\'channel\',this.value)">' +
+        '<input class="dev-code-input" placeholder="Measuring point" value="' + escapeHtml(r.measuringPoint || '') + '" ' +
+          'onchange="saveChannel(\'' + dev.id + '\',' + i + ',\'measuringPoint\',this.value)">' +
+        '<button class="inst-sec-del" onclick="removeChannel(\'' + dev.id + '\',' + i + ')">\u2715</button>' +
+      '</div>';
+  });
+  html += '<button class="btn btn-secondary btn-block" style="margin-top:6px" ' +
+            'onclick="addChannel(\'' + dev.id + '\')">+ Add channel</button></div>';
+  return html;
+}
+
+function renderGateway(gw) {
+  const st = INSTALL_STATUS[gw.status];
+  const tag = st ? '<span class="pill green">' + st.label + '</span>'
+                 : '<span class="pill">Pending</span>';
+  let slots = '';
+  for (let i = 0; i < 2; i++) {
+    const pid = (gw.photo_ids || [])[i];
+    slots += pid
+      ? '<div class="photo-slot filled" data-photo="' + pid + '">' +
+          '<button class="ph-rm" onclick="removeGatewayPhoto(\'' + gw.id + '\',' + i + ',event)">\u2715</button></div>'
+      : '<div class="photo-slot" onclick="document.getElementById(\'gph-' + gw.id + '-' + i + '\').click()">' +
+          '<div class="ph-icon">\u{1F4F7}</div><div class="ph-label">Photo ' + (i + 1) + '</div></div>';
+  }
+  return '<div class="dev-card">' +
+    '<input type="file" accept="image/*" capture="environment" class="ph-input" ' +
+      'id="gph-' + gw.id + '-0" onchange="handleGatewayPhoto(\'' + gw.id + '\',0,this)">' +
+    '<input type="file" accept="image/*" capture="environment" class="ph-input" ' +
+      'id="gph-' + gw.id + '-1" onchange="handleGatewayPhoto(\'' + gw.id + '\',1,this)">' +
+    '<div class="dev-card-hd">' +
+      '<div class="dev-card-info"><div class="dev-name">' +
+        escapeHtml(gw.location || 'Gateway') + '</div></div>' + tag +
+      '<button class="inst-sec-del" onclick="removeGateway(\'' + gw.id + '\')">\u2715</button>' +
+    '</div>' +
+    '<div style="padding:2px 14px 10px">' +
+      '<label class="inst-lbl">Gateway EUI</label>' +
+      '<div class="code-row">' +
+        '<input class="dev-code-input" placeholder="e.g. eui-0016c001f10de227" ' +
+          'value="' + escapeHtml(gw.code || '') + '" ' +
+          'onchange="saveGatewayField(\'' + gw.id + '\',\'code\',this.value)">' +
+        '<button class="paste-btn" onclick="pasteGatewayCode(\'' + gw.id + '\',event)">\u{1F4CB} Paste</button>' +
+      '</div>' +
+      '<label class="inst-lbl" style="margin-top:10px">Location</label>' +
+      '<input class="dev-code-input" placeholder="e.g. Level 6 - Plant Room" ' +
+        'value="' + escapeHtml(gw.location || '') + '" ' +
+        'onchange="saveGatewayField(\'' + gw.id + '\',\'location\',this.value)">' +
+    '</div>' +
+    '<div class="photo-row">' + slots + '</div>' +
+    '<div class="dev-actions">' +
+      '<button class="btn btn-green" onclick="markGateway(\'' + gw.id + '\',\'done\')">\u2713 Installed</button>' +
+      '<button class="dev-btn-reset" onclick="markGateway(\'' + gw.id + '\',null)">\u21ba</button>' +
+    '</div>' +
+  '</div>';
+}
+
+/* ------------------------------------------------------------
+   Helpers
+------------------------------------------------------------ */
+function installTotals(d) {
+  let total = 0, done = 0, addressed = 0, noaccess = 0;
+  for (const sec of (d.sections || [])) {
+    for (const dev of (sec.devices || [])) {
+      total++;
+      if (dev.status) addressed++;
+      if (dev.status === 'done') done++;
+      if (dev.status === 'noaccess') noaccess++;
+    }
+  }
+  return { total, done, addressed, noaccess };
+}
+
+function findDevice(d, deviceId) {
+  for (const sec of (d.sections || [])) {
+    const dev = (sec.devices || []).find((x) => x.id === deviceId);
+    if (dev) return { sec, dev };
+  }
+  return null;
+}
+
+/** Render photo thumbnails after the markup is in place. */
+async function hydrateInstallPhotos() {
+  const slots = document.querySelectorAll('#installBody .photo-slot.filled[data-photo]');
+  for (const el of slots) {
+    try {
+      const rec = await CTKStorage.getPhoto(el.dataset.photo);
+      if (!rec || !rec.blob) continue;
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(rec.blob);
+      img.alt = 'Device photo';
+      el.insertBefore(img, el.firstChild);
+    } catch (err) {
+      dbg('error', 'install: photo hydrate failed', { id: el.dataset.photo, err: String(err) });
+    }
+  }
+}
+
+/* ------------------------------------------------------------
+   Mutations
+------------------------------------------------------------ */
+async function saveInstallField(field, value) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  ctx.data[field] = value.trim();
+  await saveInstall(ctx);
+}
+
+async function addSection() {
+  const name = prompt('Section name (e.g. Level 2 Stroke Ward)');
+  if (!name || !name.trim()) return;
+  const ctx = await loadInstall(); if (!ctx) return;
+  ctx.data.sections = ctx.data.sections || [];
+  ctx.data.sections.push({ id: uid('sec'), name: name.trim(), devices: [] });
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function removeSection(sectionId) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const sec = (ctx.data.sections || []).find((s) => s.id === sectionId);
+  if (!sec) return;
+  const n = (sec.devices || []).length;
+  if (!confirm('Remove "' + sec.name + '"' + (n ? ' and its ' + n + ' device(s)' : '') + '?')) return;
+  for (const dev of (sec.devices || [])) {
+    for (const pid of (dev.photo_ids || [])) {
+      try { await CTKStorage.deletePhoto(pid); } catch (_) {}
+    }
+  }
+  ctx.data.sections = ctx.data.sections.filter((s) => s.id !== sectionId);
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function addDevice(sectionId) {
+  const name = prompt('Device location / room name');
+  if (!name || !name.trim()) return;
+  const ctx = await loadInstall(); if (!ctx) return;
+  const sec = (ctx.data.sections || []).find((s) => s.id === sectionId);
+  if (!sec) return;
+  sec.devices = sec.devices || [];
+  sec.devices.push({
+    id: uid('dev'), code: '', name: name.trim(), deviceCode: '',
+    status: null, notes: '', channels: [], photo_ids: [],
+  });
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+/** Delete a device — available right where the technician is working. */
+async function removeDevice(sectionId, deviceId) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const sec = (ctx.data.sections || []).find((s) => s.id === sectionId);
+  if (!sec) return;
+  const dev = (sec.devices || []).find((x) => x.id === deviceId);
+  if (!dev) return;
+  if (!confirm('Remove "' + (dev.name || dev.code) + '"? Its photos will be deleted too.')) return;
+  for (const pid of (dev.photo_ids || [])) {
+    try { await CTKStorage.deletePhoto(pid); } catch (_) {}
+  }
+  sec.devices = sec.devices.filter((x) => x.id !== deviceId);
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function saveDeviceField(deviceId, field, value) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const hit = findDevice(ctx.data, deviceId); if (!hit) return;
+  hit.dev[field] = value.trim();
+  await saveInstall(ctx);
+  if (field === 'deviceCode') await renderInstall();
+}
+
+async function markDevice(deviceId, status) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const hit = findDevice(ctx.data, deviceId); if (!hit) return;
+  hit.dev.status = status;
+  hit.dev.ts = status ? new Date().toISOString() : null;
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function addChannel(deviceId) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const hit = findDevice(ctx.data, deviceId); if (!hit) return;
+  hit.dev.channels = hit.dev.channels || [];
+  hit.dev.channels.push({ channel: '', measuringPoint: '' });
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function saveChannel(deviceId, index, field, value) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const hit = findDevice(ctx.data, deviceId); if (!hit) return;
+  if (!hit.dev.channels || !hit.dev.channels[index]) return;
+  hit.dev.channels[index][field] = value.trim();
+  await saveInstall(ctx);
+}
+
+async function removeChannel(deviceId, index) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const hit = findDevice(ctx.data, deviceId); if (!hit) return;
+  hit.dev.channels.splice(index, 1);
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function pasteDeviceCode(deviceId, ev) {
+  if (ev) ev.stopPropagation();
+  try {
+    const text = await navigator.clipboard.readText();
+    if (!text) { toast('Clipboard is empty', true); return; }
+    await saveDeviceField(deviceId, 'deviceCode', text.trim());
+    toast('Code pasted');
+  } catch (err) {
+    toast('Could not read the clipboard \u2014 paste into the box instead', true);
+  }
+}
+
+async function pasteGatewayCode(gatewayId, ev) {
+  if (ev) ev.stopPropagation();
+  try {
+    const text = await navigator.clipboard.readText();
+    if (!text) { toast('Clipboard is empty', true); return; }
+    await saveGatewayField(gatewayId, 'code', text.trim());
+    toast('Code pasted');
+  } catch (err) {
+    toast('Could not read the clipboard \u2014 paste into the box instead', true);
+  }
+}
+
+/* ------------------------------------------------------------
+   Photos
+------------------------------------------------------------ */
+async function handleInstallPhoto(deviceId, slot, input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  try {
+    const compressed = await compressPhoto(file);
+    const photoId = await CTKStorage.addPhoto(APP.currentVisitId, APP.currentWorkItemId, compressed);
+    const ctx = await loadInstall(); if (!ctx) return;
+    const hit = findDevice(ctx.data, deviceId); if (!hit) return;
+    hit.dev.photo_ids = hit.dev.photo_ids || [];
+    hit.dev.photo_ids[slot] = photoId;
+    await saveInstall(ctx);
+    await renderInstall();
+  } catch (err) {
+    dbg('error', 'install: photo failed', String(err));
+    toast('Could not save that photo: ' + err.message, true);
+  }
+}
+
+async function removeInstallPhoto(deviceId, slot, ev) {
+  if (ev) ev.stopPropagation();
+  const ctx = await loadInstall(); if (!ctx) return;
+  const hit = findDevice(ctx.data, deviceId); if (!hit) return;
+  const pid = (hit.dev.photo_ids || [])[slot];
+  if (pid) { try { await CTKStorage.deletePhoto(pid); } catch (_) {} }
+  hit.dev.photo_ids[slot] = undefined;
+  hit.dev.photo_ids = hit.dev.photo_ids.filter(Boolean);
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function handleGatewayPhoto(gatewayId, slot, input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  try {
+    const compressed = await compressPhoto(file);
+    const photoId = await CTKStorage.addPhoto(APP.currentVisitId, APP.currentWorkItemId, compressed);
+    const ctx = await loadInstall(); if (!ctx) return;
+    const gw = (ctx.data.gateways || []).find((g) => g.id === gatewayId); if (!gw) return;
+    gw.photo_ids = gw.photo_ids || [];
+    gw.photo_ids[slot] = photoId;
+    await saveInstall(ctx);
+    await renderInstall();
+  } catch (err) {
+    toast('Could not save that photo: ' + err.message, true);
+  }
+}
+
+async function removeGatewayPhoto(gatewayId, slot, ev) {
+  if (ev) ev.stopPropagation();
+  const ctx = await loadInstall(); if (!ctx) return;
+  const gw = (ctx.data.gateways || []).find((g) => g.id === gatewayId); if (!gw) return;
+  const pid = (gw.photo_ids || [])[slot];
+  if (pid) { try { await CTKStorage.deletePhoto(pid); } catch (_) {} }
+  gw.photo_ids[slot] = undefined;
+  gw.photo_ids = gw.photo_ids.filter(Boolean);
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+/* ------------------------------------------------------------
+   Gateways
+------------------------------------------------------------ */
+async function addGateway() {
+  const ctx = await loadInstall(); if (!ctx) return;
+  ctx.data.gateways = ctx.data.gateways || [];
+  ctx.data.gateways.push({ id: uid('gw'), code: '', location: '', status: null, photo_ids: [] });
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function saveGatewayField(gatewayId, field, value) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const gw = (ctx.data.gateways || []).find((g) => g.id === gatewayId); if (!gw) return;
+  gw[field] = value.trim();
+  await saveInstall(ctx);
+}
+
+async function markGateway(gatewayId, status) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const gw = (ctx.data.gateways || []).find((g) => g.id === gatewayId); if (!gw) return;
+  gw.status = status;
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+async function removeGateway(gatewayId) {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const gw = (ctx.data.gateways || []).find((g) => g.id === gatewayId); if (!gw) return;
+  if (!confirm('Remove this gateway?')) return;
+  for (const pid of (gw.photo_ids || [])) {
+    try { await CTKStorage.deletePhoto(pid); } catch (_) {}
+  }
+  ctx.data.gateways = ctx.data.gateways.filter((g) => g.id !== gatewayId);
+  await saveInstall(ctx);
+  await renderInstall();
+}
+
+/* ------------------------------------------------------------
+   CSV / paste import
+   Columns: Section, Code, Name, Channel, Measuring point
+------------------------------------------------------------ */
+function openCsvImport() {
+  document.getElementById('csvText').value = '';
+  document.getElementById('csvModal').style.display = 'flex';
+}
+function closeCsvImport() {
+  document.getElementById('csvModal').style.display = 'none';
+}
+
+function parseDeviceList(raw) {
+  const rows = [];
+  for (const line of String(raw).split('\n').map((l) => l.trim()).filter(Boolean)) {
+    if (/^(section|#)/i.test(line)) continue;          // header row
+    const parts = line.includes('\t') ? line.split('\t') : line.split(',');
+    if (parts.length < 2) continue;
+    const clean = (s) => (s || '').trim().replace(/^"|"$/g, '');
+    const section = clean(parts[0]);
+    const code    = clean(parts[1]);
+    const name    = clean(parts[2]) || code;
+    if (!code && !name) continue;
+    rows.push({ section, code, name,
+                channel: clean(parts[3]), measuringPoint: clean(parts[4]) });
+  }
+  return rows;
+}
+
+async function runCsvImport() {
+  const rows = parseDeviceList(document.getElementById('csvText').value);
+  if (!rows.length) { toast('Nothing recognised in that list', true); return; }
+
+  const ctx = await loadInstall(); if (!ctx) return;
+  ctx.data.sections = ctx.data.sections || [];
+  const byName = {};
+  for (const s of ctx.data.sections) byName[s.name.toLowerCase()] = s;
+
+  let added = 0, skipped = 0;
+  for (const r of rows) {
+    const key = (r.section || 'Unsectioned').toLowerCase();
+    if (!byName[key]) {
+      const sec = { id: uid('sec'), name: r.section || 'Unsectioned', devices: [] };
+      ctx.data.sections.push(sec);
+      byName[key] = sec;
+    }
+    const sec = byName[key];
+    // Don't duplicate a device already in this section
+    if (sec.devices.some((d) => (d.code && d.code === r.code) ||
+                                (d.name || '').toLowerCase() === r.name.toLowerCase())) {
+      skipped++; continue;
+    }
+    sec.devices.push({
+      id: uid('dev'), code: r.code, name: r.name, deviceCode: '',
+      status: null, notes: '', photo_ids: [],
+      channels: (r.channel || r.measuringPoint)
+        ? [{ channel: r.channel, measuringPoint: r.measuringPoint }] : [],
+    });
+    added++;
+  }
+
+  await saveInstall(ctx);
+  closeCsvImport();
+  toast('Imported ' + added + ' device' + (added === 1 ? '' : 's') +
+        (skipped ? ', ' + skipped + ' already present' : ''));
+  await renderInstall();
+}
+
+/* ------------------------------------------------------------
+   Multi-day carry-forward
+------------------------------------------------------------ */
+/**
+ * Start the next day at the same site, carrying the schedule over.
+ * Statuses come with it so the technician can see what's already done;
+ * the merger keys on device name and prefers 'done', so nothing is
+ * double-counted when the days are combined. Photos are NOT carried —
+ * they stay in the day that took them, keeping bundles small.
+ */
+async function nextDayAtSite() {
+  const ctx = await loadInstall();
+  if (!ctx) { toast('Nothing to carry forward', true); return; }
+
+  // The day after THIS visit, not the day after today — otherwise carrying
+  // forward a job dated in the future lands on the wrong date entirely.
+  const base = new Date(ctx.visit.date + 'T12:00:00Z');
+  const tomorrow = isNaN(base)
+    ? new Date(Date.now() + 864e5).toISOString().slice(0, 10)
+    : new Date(base.getTime() + 864e5).toISOString().slice(0, 10);
+  const visit = CTKSchema.createVisit({
+    client: ctx.visit.client,
+    site: ctx.visit.site,
+    address: ctx.visit.address,
+    date: tomorrow,
+    technician: ctx.visit.technician,
+    app_version: APP_BUILD,
+  });
+
+  const carried = JSON.parse(JSON.stringify(ctx.data));
+  carried.report_date = null;
+  for (const sec of (carried.sections || [])) {
+    for (const dev of (sec.devices || [])) {
+      dev.id = uid('dev');
+      dev.photo_ids = [];          // photos stay with the day they were taken
+    }
+    sec.id = uid('sec');
+  }
+  for (const gw of (carried.gateways || [])) {
+    gw.id = uid('gw');
+    gw.photo_ids = [];
+  }
+
+  visit.work_items.push(CTKSchema.createWorkItem('installation', carried));
+  await CTKStorage.saveVisit(visit);
+
+  const totals = installTotals(carried);
+  toast('New day started \u2014 ' + (totals.total - totals.done) + ' device(s) outstanding');
+  APP.screenStack = ['home'];
+  await openVisitOverview(visit.visit_id);
+}
+
+/** Mark the install work item complete. */
+async function completeInstall() {
+  const ctx = await loadInstall(); if (!ctx) return;
+  const totals = installTotals(ctx.data);
+  const outstanding = totals.total - totals.addressed;
+  if (outstanding > 0 &&
+      !confirm(outstanding + ' device(s) have no status yet. Mark this job complete anyway?')) {
+    return;
+  }
+  ctx.item.status = 'complete';
+  ctx.item.completed_at = new Date().toISOString();
+  ctx.data.report_date = ctx.visit.date;
+  await saveInstall(ctx);
+
+  const v = await CTKStorage.getVisit(APP.currentVisitId);
+  if (v && v.work_items.every((w) => w.status === 'complete')) {
+    v.status = 'complete';
+    v.completed_at = new Date().toISOString();
+    await CTKStorage.saveVisit(v);
+  }
+  toast('Installation marked complete');
+  await openVisitOverview(APP.currentVisitId, true);
+}
+
+
+/* ============================================================
+   Share / QR handoff
+============================================================ */
+
+/** The URL a phone should open. Strips any query or hash. */
+function shareUrl() {
+  return location.origin + location.pathname;
+}
+
+function showShareModal() {
+  const url = shareUrl();
+  document.getElementById('qrUrl').textContent = url;
+
+  const holder = document.getElementById('qrHolder');
+  try {
+    holder.innerHTML = CTKQR.toSVG(url, { scale: 6, quiet: 3 });
+  } catch (err) {
+    // Never leave a blank box — the URL below is still usable.
+    holder.innerHTML = '<p class="modal-hint">Couldn\'t draw the code (' +
+      escapeHtml(err.message) + '). Use the link below instead.</p>';
+  }
+
+  document.getElementById('shareModal').style.display = 'flex';
+  document.addEventListener('keydown', handleShareKey);
+}
+
+function hideShareModal() {
+  document.getElementById('shareModal').style.display = 'none';
+  document.removeEventListener('keydown', handleShareKey);
+}
+
+function handleShareKey(e) {
+  if (e.key === 'Escape') hideShareModal();
+}
+
+async function copyShareUrl() {
+  const url = shareUrl();
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('Link copied');
+  } catch (err) {
+    toast('Couldn\'t copy — select the link and copy it manually', true);
+  }
+}
+
+/* ============================================================
+   Go
+============================================================ */
+boot();
+</script>
+</body>
+</html>
