@@ -1,0 +1,3296 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-31",
+  "client": "Dishoom",
+  "site_count": 14,
+  "sites": [
+    {
+      "site": "Brighton (PR1)",
+      "client": "Dishoom",
+      "site_code": "PR1",
+      "doc_stem": "SVR_DISH_BR(PR1)",
+      "last_visit": "2025-10-09",
+      "source_file": "SVR_DISH_BR_PR1__2025_10_9_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 27,
+      "outlets": [
+        {
+          "name": "F1 - Terrace - Bib tap",
+          "group": 0,
+          "readings": [
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - LHS Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - LHS Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Entrance Bar - Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Glass Wash - Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Glass Wash - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Hand Wash - Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Accessible Toilet - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Toilet 1 (Far Left) - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Toilet 2 - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Toilet 3 - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Toilet 4 - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Toilet 5 - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Toilet 6 (Far Right) - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - WHB next to door",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Sink next to door",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - WHB RH corner",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Sink RH corner",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Pot Wash Area - RHS Sink",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Pot Wash Area - LHS Sink",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Ice Machine Room - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Cold Store - Sink",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Car Park Prep Room - Sink",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Car Park Prep Room - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Cleaners Cupboard - Sink",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - LH Staff WC - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - RH Staff WC - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Battersea (D10)",
+      "client": "Dishoom",
+      "site_code": "D10",
+      "doc_stem": "SVR_DISH_BS(D10)",
+      "last_visit": "2025-11-10",
+      "source_file": "SVR_DISH_BS_D10__2025_11_10_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 31,
+      "outlets": [
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 1 (LH)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 2",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 3",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 4",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 5 (RH)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - LH WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - Middle WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - RH WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Cleaners Cupboard - Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "LGF - Accessible Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Busser Station - Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "LGF - Bar - LH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Bar - RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Bar Glass Wash - Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - Sink next to steam oven",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - WHB next to steam oven",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - Prep Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - Prep WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - Sink next to curry section",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - WHB next to curry section",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - Dish wash Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - Pot wash Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Kitchen - WHB next to Pot wash",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "UGF - Bar - LH Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "UGF - Bar - RH Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "UGF - Busser Station - Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "UGF - Back Bar Glass Wash / Ice Production - LH Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "UGF - Back Bar Glass Wash / Ice Production - RH Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Back Bar Glass Wash / Ice Production - RH Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Staff Ladies Toilet - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Staff Gents Toilet - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Birmingham (D08)",
+      "client": "Dishoom",
+      "site_code": "D08",
+      "doc_stem": "SVR_DISH_B(D08)",
+      "last_visit": "2026-06-30",
+      "source_file": "SVR_DISH_B_D08__2026_06_30_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 31,
+      "outlets": [
+        {
+          "name": "F0 - Busser Station - SSS - RHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Busser Station - SSS - Top Tap",
+          "group": 0,
+          "readings": [
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Dough Prep - Wash down tap",
+          "group": 0,
+          "readings": [
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Kitchen Pass - WHB",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Hobs Section - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Hobs Section - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - KP area - LHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - KP area - RHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Cold Prep - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Cold Prep - LHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Stand up fridge area - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Stand up fridge area - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Ladies Staff Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Chefs Changing Room - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Mixed Staff Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Bar - LHS - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Bar - LHS Middle - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Bar - RHS Middle - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Bar - RHS - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Male Toilet - WHB - LHS",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Male Toilet - WHB - Middle",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Male Toilet - WHB - RHS",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Disabled WC",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - LHS",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - LHS Middle",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - Middle",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - RHS Middle",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - RHS",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Glass Wash - LHS - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Glass Wash - Corner - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Plant Room - CWST 1",
+          "group": 0,
+          "readings": [
+            "cold"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Covent Gardens (D1SQ)",
+      "client": "Dishoom",
+      "site_code": "D1SQ",
+      "doc_stem": "SVR_DISH_CG(D1SQ)",
+      "last_visit": "2026-04-29",
+      "source_file": "SVR_DISH_CG_D1SQ__2026_04_29_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 32,
+      "outlets": [
+        {
+          "name": "Frying Section",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Frying Section - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Sink by Fridges & Curry Section",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Sink by Fridges & Curry Section - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Middle Cooking Aisle",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Middle Cooking Aisle - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Chefs Office Area",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Chefs Office Area - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Kitchen KP Area",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Main KP Area - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Main KP Area - Spray Tap Section",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Glass Wash Area - RHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Glass Wash Area - LHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Downstairs Bar - LHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Downstairs Bar - Middle",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Downstairs Bar - RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Male WC - RHS",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Male WC - RHS - Middle",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Male WC - LHS - Middle",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Male WC - LHS",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - LHS",
+          "group": 3,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - Middle",
+          "group": 3,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - RHS",
+          "group": 3,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - Lower LHS",
+          "group": 3,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - Lower RHS",
+          "group": 3,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Bussers Area - WHB",
+          "group": 4,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Upper Bar - LHS",
+          "group": 5,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Upper Bar - Middle",
+          "group": 5,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Upper Bar - RHS",
+          "group": 5,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Upstairs Glass Wash - By Dishwasher",
+          "group": 6,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Upstairs Glass Wash - WHB",
+          "group": 6,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Disabled WC",
+          "group": 7,
+          "readings": [
+            "tmv"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Canary Wharf (D09)",
+      "client": "Dishoom",
+      "site_code": "D09",
+      "doc_stem": "SVR_DISH_CW(D09)",
+      "last_visit": "2025-11-10",
+      "source_file": "SVR_DISH_CW_D9__2025_11_10_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 31,
+      "outlets": [
+        {
+          "name": "F0 - Wash up Butler Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Wash up WHB 1",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Wash up hand wash sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Wash up LH sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Wash up RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Accessible Toilet WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Bar LH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Bar Middle Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Bar RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Cleaners Cupboard Butler Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F1 - LH Staff Toilet WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Middle Staff Toilet WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - RH Staff Toilet WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Gents Toilets WHB 1",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Gents Toilets WHB 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Gents Toilets WHB 3",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Gents Toilets WHB 4",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Ladies Toilets WHB 1",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Ladies Toilets WHB 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Ladies Toilets WHB 3",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Ladies Toilets WHB 4",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Ladies Toilets WHB 5",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen Pot wash Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen Equipment wash Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen Prep WHB next to Equipment Wash",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen Prep WHB opposite steam oven",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen Prep Sink opposite steam oven",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen Prep WHB opposite grill",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen Prep Sink opposite grill",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen Curry section sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen WHB next to plates",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Cambridge (PR2)",
+      "client": "Dishoom",
+      "site_code": "PR2",
+      "doc_stem": "SVR_DISH_C(PR2)",
+      "last_visit": "2025-09-18",
+      "source_file": "SVR_DISH_C_PR2__2025_09_18_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 22,
+      "outlets": [
+        {
+          "name": "F0 - Main Bar - RHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - LHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Glass Wash - LHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Glass Wash - RHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Disabled WC - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Male Toilet - WHB - LHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement  - Male Toilet - WHB - Middle",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement  - Male Toilet - WHB - RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - LHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - Middle",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Sink next to steam oven",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - WHB next to steam oven",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Sink next to Tandoor",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - WHB next to Tandoor",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Pot Wash Area - RHS Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Pot Wash Area - LHS Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Pot Wash Area - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Prep Area - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Cleaners Cupboard",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - LH Staff WC - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - RH Staff WC - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Carnaby Street (D04)",
+      "client": "Dishoom",
+      "site_code": "D04",
+      "doc_stem": "SVR_DISH_C(D04)",
+      "last_visit": "2025-11-06",
+      "source_file": "SVR_DISH_D04_2025_11_06_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 23,
+      "outlets": [
+        {
+          "name": "F0 - Main Bar - Sink 1 (LHS)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 2",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 3",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 4 (RHS)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar Wash Up Area - Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Busser Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Accessible Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Male Toilet - WHB - LHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Male Toilet - WHB - Middle",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Male Toilet - WHB - RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 1 (LHS)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 3",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 4",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 5 (RHS)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Staff Male WC - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Staff Female WC - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Cleaners Cupboard / Ice Room",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - WHB",
+          "group": 1,
+          "readings": [
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Sink 1",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Sink 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Potwash Sink LHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Kitchen - Potwash Sink RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Edinburgh (D5)",
+      "client": "Dishoom",
+      "site_code": "D05",
+      "doc_stem": "SVR_DISH_ED(D05)",
+      "last_visit": "2025-12-17",
+      "source_file": "SVR_DISH_ED_D5__2025_12_17_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 30,
+      "outlets": [
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 1 (LH)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 2",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 3",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 4",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 5 (RH)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - LH WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - Middle WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - RH WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Cleaners Cupboard - Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "LGF - Accessible Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "LGF - Bar - LH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Bar - Middle Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Bar - RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Bar Glass Wash - LH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Bar Glass Wash - RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Bar - Glass Wash - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "GF - Kitchen - Food wash sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "GF - Kitchen - Food wash sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "GF - Kitchen - Sink opposite dumbwaiter",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "GF - Kitchen - WHB opposite dumbwaiter",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "GF - Kitchen - Potwash sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "GF Mezz - Kitchen - Prep Food Wash Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "GF Mezz - Kitchen - Pot wash sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "GF Mezz - Kitchen - Prep Food Wash WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Bar - LH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Bar - RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Back Bar Glass Wash / Ice Production - LH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "UGF - Back Bar Glass Wash / Ice Production - RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Staff RH Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Staff LH Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Glasgow (D11)",
+      "client": "Dishoom",
+      "site_code": "D11",
+      "doc_stem": "SVR_DISH_GG(D11)",
+      "last_visit": "2025-12-17",
+      "source_file": "SVR_DISH_GG_D11__2025_12_17_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 25,
+      "outlets": [
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB 1 (LH)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB Middle",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Customer Ladies Toilet - WHB RH",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - LH WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - Middle WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Customer Gents Toilet - RH WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Cleaners Cupboard - Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "LGF - LH Staff Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "LGF - Middle Staff Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "LGF - RH Staff Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "LGF - Kitchen - Sink next to steam oven",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Kitchen - WHB next to steam oven",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Kitchen - Prep Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Kitchen - Prep WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Kitchen - WHB next to curry section",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Kitchen - Dish wash Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "LGF - Kitchen - Pot wash Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "LGF - Kitchen - WHB next to Pot wash",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "GF - Accessible Toilet - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "GF - Busser Station - WHB used to be sink outside lift",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "GF - Bar - LH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "GF - Bar - Middle Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "GF - Bar - RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "GF - Bar Glass Wash - LH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "GF - Bar Glass Wash - RH Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Kings Cross (D03)",
+      "client": "Dishoom",
+      "site_code": "D03",
+      "doc_stem": "SVR_DISH_KC(D03)",
+      "last_visit": "2025-11-06",
+      "source_file": "SVR_DISH_KC_D03__2025_11_06_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 28,
+      "outlets": [
+        {
+          "name": "F1 - Kitchen - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen - Sink 1",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen - Sink 2",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F1 - Kitchen - Potwash Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 1 (LHS)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 3",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 4",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 5",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 6",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 7 (RHS)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Busser Sink next to lift",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Dining Room Butler Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Bar - WHB",
+          "group": 2,
+          "readings": [
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Bar - LHS Sink",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Bar - Middle Sink",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Bar - RHS Sink",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "Basement - Accessible Toilet - WHB",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Male Toilet - WHB - LHS",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Male Toilet - WHB - Middle",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Male Toilet - WHB - RHS",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 1 (LHS)",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 2",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 3",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 4",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 5 (RHS)",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Basement - Staff Male WC - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Staff Female WC - WHB",
+          "group": 2,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Kensington (D06)",
+      "client": "Dishoom",
+      "site_code": "D06",
+      "doc_stem": "SVR_DISH_KN(D06)",
+      "last_visit": "2026-06-25",
+      "source_file": "SVR_DISH_KN_D06__2026_06_25_-_Annual_Temperature_Monitoring_.xlsx",
+      "outlet_count": 25,
+      "outlets": [
+        {
+          "name": "F1 - Staff Male WC - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Staff Female WC - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F1 - Staff Break Room / Team Dining - Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 1 (LHS)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 3",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar - Sink 4 (RHS)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar Wash Up Area - Sink",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0 - Main Bar Wash Up Area - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Accessible Toilet - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Male Toilet - WHB - LHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Male Toilet - WHB -  Middle",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Male Toilet - WHB - RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - 1 (LHS)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - 3",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - 4",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Female Toilet - WHB - 5 (RHS)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0  - Kitchen - WHB 1",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0  - Kitchen - WHB 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0  - Kitchen - WHB 3",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "tmv",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0  - Kitchen - Sink 1",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0  - Kitchen - Sink 2",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0  - Kitchen - Potwash Sink LHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        },
+        {
+          "name": "F0  - Kitchen - Potwash Sink RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold",
+            "hot_return"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Manchester (D07)",
+      "client": "Dishoom",
+      "site_code": "D07",
+      "doc_stem": "SVR_DISH_M(D07)",
+      "last_visit": "2025-08-11",
+      "source_file": "SVR_DISH_M_D07__2025_08_11_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 22,
+      "outlets": [
+        {
+          "name": "F0 - Main Back Bar - RHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Back Bar - Middle RHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Back Bar - Middle LHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Main Back Bar - LHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Family Busser Station - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Dining Room Bar - RHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Dining Room Bar - Middle RHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Dining Room Bar - Middle LHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Dining Room Bar - LHS Sink",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Disabled WC - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Bar - LHS - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Bar - LHS Middle - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Bar - RHS Middle - SSS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Bar - RHS - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Male Toilet - WHB - LHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement  - Male Toilet - WHB - Middle",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement  - Male Toilet - WHB - RHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement  - Female Toilet - WHB - 1 (LHS)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 2",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 3",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 4",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Basement - Female Toilet - WHB - 5 (RHS)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Oxford (PR3)",
+      "client": "Dishoom",
+      "site_code": "PR3",
+      "doc_stem": "SVR_DISH_OX(PR3)",
+      "last_visit": "2025-12-04",
+      "source_file": "SVR_DISH_OX_PR3__2025_12_04_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 23,
+      "outlets": [
+        {
+          "name": "Pot Wash Spray (LHS)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Pot Wash Tap (LHS)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Pot Wash Spray (RHS)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Pot Wash Tap (RHS)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "WHB (By Entrance)",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Cold Prep Area",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Cold Prep Area - WHB (By Walk-In Fridge)",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Prep Area  (by combi oven)",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Prep Area - LHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Prep Area - WHB",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Line WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Bar 1 (LHS) (By Entrance)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Bar 2 - Middle",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Bar 3 - RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Glass Wash Area (by coffe machine)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Glass Wash Area (Above dishwasher)",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Accessible WC",
+          "group": 2,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Ladies WC - Far Cubicle",
+          "group": 3,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Ladies WC - Middle Cubicle",
+          "group": 3,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Ladies WC - Near Cubicle",
+          "group": 3,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Mens WC - LHS",
+          "group": 4,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Mens WC - Middle",
+          "group": 4,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Mens WC - RHS",
+          "group": 4,
+          "readings": [
+            "tmv"
+          ]
+        }
+      ]
+    },
+    {
+      "site": "Shoreditch (D02)",
+      "client": "Dishoom",
+      "site_code": "D02",
+      "doc_stem": "SVR_DISH_S(D02)",
+      "last_visit": "2025-11-06",
+      "source_file": "SVR_DISH_S_D02__2025_11_06_-_Annual_Temperature_Monitoring.xlsx",
+      "outlet_count": 20,
+      "outlets": [
+        {
+          "name": "Basement Bar - Behind Bar",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Male WC - WHB - LHS",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Male WC - WHB - Middle",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Male WC - WHB - RHS",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - WHB (LHS)",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - WHB",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - WHB",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - WHB",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Female WC - WHB (RHS)",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Staff WC - Male",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Staff WC - Female",
+          "group": 0,
+          "readings": [
+            "cold",
+            "tmv"
+          ]
+        },
+        {
+          "name": "Potwash - WHB",
+          "group": 0,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "Potwash - LHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "Potwash - RHS",
+          "group": 0,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Disabled WC",
+          "group": 1,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Bussers station - WHB",
+          "group": 1,
+          "readings": [
+            "tmv"
+          ]
+        },
+        {
+          "name": "F0 - Bar - WHB",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Glass wash area - SSS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Bar - Sink - RHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        },
+        {
+          "name": "F0 - Bar - Sink - LHS",
+          "group": 1,
+          "readings": [
+            "hot",
+            "cold"
+          ]
+        }
+      ]
+    }
+  ]
+}
